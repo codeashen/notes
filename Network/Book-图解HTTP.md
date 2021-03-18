@@ -1,6 +1,10 @@
 ## 图解HTTP
 
-<a href="https://book.douban.com/subject/25863515/" target="_blank"><img src="https://s3.ax1x.com/2021/03/18/62TMmq.jpg" /></a>
+<div style="text-align:center">
+  <a href="https://book.douban.com/subject/25863515/" target="_blank">
+    <img src="https://s3.ax1x.com/2021/03/18/62TMmq.jpg" style='width:50%' />
+  </a>
+</div>
 
 ### 进度
 
