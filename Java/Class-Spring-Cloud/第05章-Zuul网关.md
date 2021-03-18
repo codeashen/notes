@@ -1,0 +1,135 @@
+## Zuul介绍
+
+### 网关介绍
+
+* 由于微服务“各自为政”的特性，使得微服务使用非常麻烦
+* 通常我们会雇用一个“传达室大爷”作为统一入口，这就是网关
+* 网关主要实现请求转发和请求过滤
+
+![image-20201203155226753](https://s3.ax1x.com/2020/12/03/D7Ncex.png)
+
+### Zuul简介
+
+* Zuul是网关大军中的一员，目前市场使用率比较高
+* Zuul除了实现请求转发和过滤，一般还作为鉴权和容错使用
+* Zuul可以无缝衔接Ribbon和Hystrix
+
+### Zuul依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+</dependency>
+```
+
+## Zuul使用
+
+### Zuul路由介绍
+
+* Zuul可以通过配置完成请求路由配置
+* Zuul服务路由默认支持serviceId作为上下文
+* ignore-services可以禁用serviceId
+
+```yml
+zuul:
+  prefix: "/webapi/"             # 统一前缀
+  routes:                        # 路由规则
+    ccfilm-user:
+      path: /user-api/**         # 路径匹配规则
+      serviceId: user-service    # 服务名称, 可以通过path访问，也可以通过serviceId访问
+      retryable: true            # 是否重试
+```
+
+### Zuul请求路由表达式
+
+| 表达式 | 含义                           |
+| ------ | ------------------------------ |
+| ？     | 匹配任意单个字符               |
+| *      | 匹配任意数量字符               |
+| **     | 匹配任意数量字符，支持多级目录 |
+
+## Zuul原理
+
+### Zuul架构图
+
+![Zuul架构图](https://s3.ax1x.com/2020/12/03/D7NqTf.png)
+
+### Zuul中request的生命周期
+
+![Zuul生命周期](https://s3.ax1x.com/2020/12/03/D7NOk8.png)
+
+### 参考文档
+
+* [Zuul网关架构剖析](https://www.cnblogs.com/itpower/p/13155634.html)
+* [Zuul源码解析](https://www.fangzhipeng.com/springcloud/2017/08/11/sc-zuul-raw.html)
+
+## Zuul进阶
+
+### 自定义Filter
+
+* 继承ZuulFilter并实现相应的方法
+* 设置Filter类型、级别和是否启用
+   * 类型：前中后（pre、routing、post）
+   * 级别：执行顺序
+* 开发具体业务逻辑
+
+### Zuul自带的核心Filter
+
+#### PreFilter
+
+![image-20201203173648554](https://s3.ax1x.com/2020/12/03/D7Ngw6.png)
+
+#### RoutingFilter
+
+![image-20201203174012808](https://s3.ax1x.com/2020/12/03/D7NWFO.png)
+
+#### PostFilter
+
+![image-20201203174129451](https://s3.ax1x.com/2020/12/03/D7Nhfe.png)
+
+## Zuul和Zuul2
+
+* Zuul使用的是阻塞式线程完成业务调用
+* Zuul2使用的是异步线程完成业务调用
+
+**Zuul阻塞调用示意图**
+
+![image-20201203174536219](https://s3.ax1x.com/2020/12/03/D7N5SH.png)
+
+**Zuul2异步调用示意图**
+
+![image-20201203174609060](https://s3.ax1x.com/2020/12/03/D7No6A.png)
+
+## Zuul整合Hystrix
+
+* Zuul可以使用FallbackProvider完成降级开发
+* Zuul默认是使用HystrixCommand进行包装的
+* Zuul默认情况下隔离使用的Semaphore
+
+## Cookie和头信息处理
+
+* Zuul帮助我们过滤了一些非安全信息
+* 诸如cookie、set-cookie和authorization等
+* 可以通过设置sensitiveHeaders来修改
+
+```properties
+# 名叫secret的header头会被过滤
+zuul.sensitive-headers=secret
+```
