@@ -1,6 +1,6 @@
 ## [Java数据结构和算法](https://book.douban.com/subject/1144007/)
 
-![image-20210319110033812](https://s3.ax1x.com/2021/03/19/6Rj526.png)
+[![image-20210319110033812](https://s3.ax1x.com/2021/03/19/6Rj526.png)](https://book.douban.com/subject/1144007/)
 
 ### 进度
 
