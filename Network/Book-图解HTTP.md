@@ -1,6 +1,6 @@
 ## [图解HTTP](https://book.douban.com/subject/25863515/)
 
-[图解HTTP](https://s3.ax1x.com/2021/03/18/62TMmq.jpg)
+[![图解HTTP](https://s3.ax1x.com/2021/03/18/62TMmq.jpg)](https://book.douban.com/subject/25863515/)
 
 ### 进度
 
