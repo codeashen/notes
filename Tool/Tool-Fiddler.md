@@ -41,10 +41,77 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
 
 ## 工具栏
 
-- <img src='assets/image-20210326011842556.png'/>添加注释
-- 
+- <img src='assets/image-20210326011842556.png'/>添加注释：标记接口，或导入导出时候有用，方便别人查看
+- <img src='assets/image-20210326012346285.png'/>重放请求：Shift+R 重放n次，串行的，非并发
+- <img src='assets/image-20210326012605937.png'/>释放断点
+- <img src='assets/image-20210326012648567.png'/>保持的会话个数
+- <img src='assets/image-20210326012722347.png'/>监听进程：点住拖到Chrome上可以只监听Chrome
+- <img src='assets/image-20210326012930052.png'/>清除IE缓存
+- <img src='assets/image-20210326013025362.png'/>文本编码解码器：有URL编码、Base64、MD5等多种
 
-# Fiddler使
+### 会话列表
+
+1. [#]--HTTP Request的顺序，从1开始，按照页面加载请求的顺序递增。
+2. [Result]--HTTP响应的状态，可以参考这里。
+3. [Protocol]——请求使用的协议（如HTTP/HTTPS/FTP）
+4. [Host]—-请求地址的域名
+5. [URL]—-请求的服务器路径和文件名，也包括GET参数
+6. [BODY]——请求的大小，以byte为单位
+7. [Caching]—-请求的缓存过期时间或缓存控制 header 等值
+8. [Content-Type]—-请求响应的类型（Content-Type)
+9. [Process]—-发出此请求的windows进程及进程ID
+10. [Comments]—-用户通过脚本或者右键菜单给此session增加的备注
+11. [Custom]--用户可以通过脚本设置的自定义值
+
+## 命令行&状态栏
+
+- 黑色命令行：可以执行一些命令操作
+  
+  - `bpu xxx ：带有xxx的请求都设置断点，不加xxx清除断点
+- <img src='assets/image-20210326014454221.png'/>是否设置代理：即是非启动Fiddler监听
+- <img src='assets/image-20210326014608457.png'/>监控的进程：浏览器、非浏览器、无等
+- <img src='assets/image-20210326014900784.png'/>断点：在进程选择右边，正常是一个空白，点一次设置请求前断点，点两次设置响应后断点
+
+### 辅助标签&工具
+
+- Statistics：请求的时间统计，HTTP请求的性能和其他数据分析，如DNS解析的时间，建立TCP/IP连接的时间消耗等信息
+
+- Inspectors：检查器，可以多种方式查看请求的请求报文和响应报文相关信息
+
+- AutoResponder：自动响应器，可用于拦截某一请求，进行如下操作：
+
+  - 重定向到本地的资源
+  - 使用Fiddler的内置响应
+  - 自定义响应
+
+  ![image-20210326020842862](assets/image-20210326020842862.png)
+
+- Composer：请求发送器，可自行填写，也可拖动请求到Composer上
+
+- Filter：过滤器，多维度的过滤规则，可根据主机、进程、请求头、响应头、状态码、响应类型和大小、断点进行请求的过滤
+
+  - 主机：分解局域网、广域网、host名称过滤
+  - 客户端进程：根据进程过滤
+  - 请求头：显示/隐藏URL中包含关键字、标记含指定header的、删除指定header、添加header
+  - 断点：根据请求方法、响应内容等设置断点
+  - 响应状态码：根据状态码控制显隐
+  - 相应类型大小：根据条件控制显隐
+  - 响应头：标记、设置、添加响应头
+
+- <img src=''/>
+
+- <img src=''/>
+
+- <img src=''/>
+
+- <img src=''/>
+
+- <img src=''/>
+
+
+![image-20210326014900784]()
+
+# Fiddler使用
 
 ## 请求分析
 
