@@ -24,11 +24,11 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
 
 > 打开Fiddler后，查看windows的 *设置 -> 网络和Internet -> 代理*  可以看到设置的代理信息
 
-##  Fiddler界面介绍
+#  Fiddler界面介绍
 
 ![image-20210326010118621](assets/image-20210326010118621.png)
 
-### 菜单栏
+## 菜单栏
 
 - File：重新打开视图、导入导出会话等
 - Edit：复制、移除、选择、粘贴、查找会话等
@@ -49,7 +49,7 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
 - <img src='assets/image-20210326012930052.png'/>清除IE缓存
 - <img src='assets/image-20210326013025362.png'/>文本编码解码器：有URL编码、Base64、MD5等多种
 
-### 会话列表
+## 会话列表
 
 1. [#]--HTTP Request的顺序，从1开始，按照页面加载请求的顺序递增。
 2. [Result]--HTTP响应的状态，可以参考这里。
@@ -72,7 +72,7 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
 - <img src='assets/image-20210326014608457.png'/>监控的进程：浏览器、非浏览器、无等
 - <img src='assets/image-20210326014900784.png'/>断点：在进程选择右边，正常是一个空白，点一次设置请求前断点，点两次设置响应后断点
 
-### 辅助标签&工具
+## 辅助标签&工具
 
 - Statistics：请求的时间统计，HTTP请求的性能和其他数据分析，如DNS解析的时间，建立TCP/IP连接的时间消耗等信息
 
@@ -98,3 +98,75 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
   - 相应类型大小：根据条件控制显隐
   - 响应头：标记、设置、添加响应头
     
+
+# Fiddler功能介绍
+
+## 断点
+
+设置断点有两种方式，全局断点和局部断点
+
+**1. 全局断点**
+
+全局断点的设置如下图所示，两个地方都可以设置，下面状态栏点一下为 Before Requests，两下为After Response， 三下取消
+
+![image-20210327004243758](assets/image-20210327004243758.png)
+
+**2. 局部断点**
+
+局部断点要使用命令行设置
+
+- 请求前断点 `bpu xxx`
+
+  url中含有关键字xxx的请求服务器前被阻塞， 不带关键字xxx取消断点
+
+- 响应后断点 `bpafter xxx`
+
+  url中含有关键字xxx的服务器响应后被阻塞，不带关键字xxx取消断点
+
+## 弱网测试
+
+![image-20210327010208519](assets/image-20210327010208519.png)
+
+上图中，勾选①处，开启弱网环境。若要自定义弱网程度，点击②处自动打开脚本，查找`m_SimulateModem` 找到如下内容
+
+```javascript
+if (m_SimulateModem) {
+    // 请求每发送1KB延迟300毫秒
+    oSession["request-trickle-delay"] = "300"; 
+    // 响应每下载1KB延迟150毫秒
+    oSession["response-trickle-delay"] = "150"; 
+}
+```
+
+## HTTPS抓包
+
+Tools > Options > HTTPS > Decrypt HTTPS traffic
+
+## App抓包
+
+电脑端设置：
+
+1. 点击 Tools > Fiddler Options > Connections.
+2. 勾选 `Allow remote computers to connect`
+3. 重启Fiddler 
+4. 确保防火墙允许Fiddler进程可以远程连接 
+
+移动端设置：
+
+1. 打开 设置>WLAN>连接上的WLAN设置，点击代理>手动，设置主机名为Fiddler所在主机的IP，端口为Fiddler监听端口
+2. 设备连接WiFi（保证在一个局域网），确保设备可以访问到`http://电脑IP:8888`，该地址会返回Fiddler Echo Service页面
+
+此时手机上的请求就可以在Fiddler上看到了，有时候有些请求抓不到，可能需要手机端安装证书，步骤如下： 
+
+1. 点击页面底部FiddlerRoot certificate下载证书
+2. 打开 设置>更多设置>系统安全>加密与凭据>从存储设备安装，选择下载好的FiddlerRoot.cer进行安装
+3. 浏览器打开`https://www.baidu.com`，已经可以抓取HTTPS包了
+4. 注意：测试完毕，记得关闭代理，否则手机无法上网
+
+> ios设备安装证书略有不同：
+>
+> 打开FiddlerRoot.cer文件并安装安装成功后，在 通用>关于本机>证书信任设置 中，信任刚安装的Fiddler证书
+
+## Fiddler插件
+
+Willow：方便的管理多环境规则，增强版的AutoResponder
