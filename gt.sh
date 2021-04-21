@@ -20,16 +20,15 @@ gitConfig() {
     # 回写结果
     git config user.name
     git config user.email
-}
-
-# 配置git远程仓库
-gitRemote() {
+    # 配置远程仓库
     echo "-------------------- update remote --------------------"
     echo -n "please enter remote address: "
     read remote_addr
-    git remote remove origin > /dev/null 2>&1
-    git remote add origin $remote_addr
-    git remote -v
+    if  [ -n "$remote_addr" ] ;then
+        git remote remove origin > /dev/null 2>&1
+        git remote add origin $remote_addr
+        git remote -v
+    fi
 }
 
 # 初始化git仓库
@@ -37,7 +36,6 @@ gitInit() {
     echo "------------------- init repository -------------------"
     git init
     gitConfig
-    gitRemote
 }
 
 # 提交并推送
@@ -60,7 +58,7 @@ gitCommitAndPush() {
 }
 
 # 定义命令执行选项
-if ! ARGS=$(getopt -o i:c:p:r:h --long init:,config:,push:,remote:,help -n "$0" -- "$@" ); then
+if ! ARGS=$(getopt -o i:c:p:h --long init:,config:,push:,help -n "$0" -- "$@" ); then
     echo "ERROR: please run '$SCRIPT_NAME --help' for help"
     exit 0
 fi
@@ -85,18 +83,12 @@ case "$1" in
         gitCommitAndPush
         shift
         ;;
-    -r|--remote)
-        cd $2
-        gitRemote
-        shift
-        ;;
     -h|--help)
         echo "Usage: $SCRIPT_NAME [options] [dir]"
         echo "Options:"
         echo "  --init, -i      初始化git仓库"
         echo "  --config, -c    配置仓库信息"
         echo "  --push, -p      提交并推送"
-        echo "  --remote, -r    更新远程仓库地址"
         echo "  --help, -h      帮助"
         exit 0
         ;;
