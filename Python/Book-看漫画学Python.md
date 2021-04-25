@@ -1,6 +1,8 @@
 ## [看漫画学Python](https://book.douban.com/subject/35069146/)
 
 > 不指望通过这个学Python，真当漫画看
+>
+> [代码仓库](https://github.com/codeashen/Python-Journey/tree/master/Cartoon-Python)
 
 [![看漫画学Python](https://img1.doubanio.com/view/subject/l/public/s33651878.jpg)](https://book.douban.com/subject/35069146/)
 
@@ -12,8 +14,8 @@
 - [x] 第4章 -  运算符
 - [x] 第5章 -  程序流程控制
 - [x] 第6章 -  容器类型的数据
-- [ ] 第7章 -  字符串
-- [ ] 第8章 -  函数
+- [x] 第7章 -  字符串
+- [x] 第8章 -  函数
 - [ ] 第9章 -  类与对象
 - [ ] 第10章 - 异常处理
 - [ ] 第11章 - 常用的内置模块
