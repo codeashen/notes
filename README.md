@@ -16,7 +16,6 @@
 
 - [Java数据结构和算法](Data%20Structures%20&%20Algorithms/Book-Java数据结构和算法.md)
 - [我的第一本算法书](Data%20Structures%20&%20Algorithms/Book-我的第一本算法书.md)
-- [我的第一本算法书](Data%20Structures%20&%20Algorithms/Book-我的第一本算法书.md)
 - [On Java 8](Java/Book-On-Java-8.md)
 - [深入理解Java虚拟机](Java/Book-深入理解Java虚拟机.md)
 - [Rocket实战指南](MQ/Book-RabbitMQ实战指南.md)
