@@ -85,11 +85,15 @@ Redis所有数据保持在内存中，对数据的更新将异步地保存到磁
 ## 3.1 Redis安装
 
 ```shell
-wget http://download.redis.io/releases/redis-3.0.7.tar.gz
-tar -xzf redis-3.0.7.tar.gz
-ln -s redis-3.0.7 redis
-cd redis
-make && make install
+# 下载安装
+> wget http://download.redis.io/releases/redis-3.0.7.tar.gz
+> tar -zxvf redis-3.0.7.tar.gz
+# 建立软连接（可选）
+> ln -s redis-3.0.7 redis
+# 编译
+> cd redis && make
+# 安装
+> make install
 ```
 
 可执行文件说明
@@ -103,31 +107,31 @@ make && make install
 
 ## 3.2 Redis三种启动方式
 
-**方式一：最简启动**
+**方式一：默认方式启动**
 
 ```shell
 # 启动redis
-redis-server
+> redis-server
 
 # 验证
 ## 查看进程
-ps -ef | grep redis
+> ps -ef | grep redis
 ## 查看端口是否处于监听
-netstat -antpl | grep redis
+> netstat -antpl | grep redis
 ## 用客户端验证
-redis-cli -h ip -p port ping
+> redis-cli -h ip -p port ping
 ```
 
-**方式二：动态参数启动**
+**方式二：指定参数启动**
 
-```shell
-redis-server --port 6380
+```bash
+> redis-server --port 6380
 ```
 
 **方式三：配置文件启动**
 
-```shell
-redis-server configPath
+```bash
+> redis-server <configPath>
 ```
 
 三种方式比较
@@ -141,7 +145,7 @@ Redis客户端连接：
 redis-cli -h ip -p port
 ```
 
-# 四、Redis常用配置
+## 3.3 Redis常用配置
 
 - daemonize：是否以守护进程启动（no|yes）（默认no，建议yes）
 - port：Redis对外端口号
