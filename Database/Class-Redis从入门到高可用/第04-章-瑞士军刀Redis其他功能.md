@@ -194,10 +194,10 @@ redis> publish sohu:auto "taxi"
 # ===== 订阅消息 =====
 redis> subscribe sohu:tv 
 1) "subscribe"
-2）"sohu:tv"
+2) "sohu:tv"
 3) (integer) 1 
 1) "message"
-2）"sohu:tv"
+2) "sohu:tv"
 3) "hello world"
 
 # ===== 取消订阅 =====
