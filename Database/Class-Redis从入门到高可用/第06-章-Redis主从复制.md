@@ -157,6 +157,10 @@ repl_backlog_histlen:1232
 
 实际中可以将复制缓冲区的容量调大些（默认 1MB），这样如果从节点和主节点断开了，重连冲 psync 的偏移量命中复制缓冲区的可能性大些，从而避免的全量复制的开销。
 
+参考文档：
+
+- [Redis主从同步-SYNC与PSYNC](https://my.oschina.net/u/3739573/blog/2245551)
+
 # 四、故障处理
 
 1. slave发生故障
