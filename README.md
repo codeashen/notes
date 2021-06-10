@@ -1,6 +1,7 @@
 ## Notes
 
 - [Elastic Stack](Database/Class-Elastic-Stack)
+- [Redis从入门到高可用](Database/Class-Redis从入门到高可用)
 - [设计模式](Design%20Patterns/Class-设计模式.md)
 - [Docker](DevOps/Class-Docker)
 - [Java SE 基础](Java/Note-JavaSE-Base.md)
