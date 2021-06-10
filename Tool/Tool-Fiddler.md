@@ -18,7 +18,7 @@
 
 ## Fiddler原理
 
-![image-20210326002135375](assets/image-20210326002135375.png)
+![image-20210326002135375](https://z3.ax1x.com/2021/06/10/22iH2R.png)
 
 Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrome浏览器等会使用该代理，然后Fiddler监听这个端口就可以抓到数据包了。
 
@@ -26,7 +26,7 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
 
 #  Fiddler界面介绍
 
-![image-20210326010118621](assets/image-20210326010118621.png)
+![image-20210326010118621](https://z3.ax1x.com/2021/06/10/22iLKx.png)
 
 ## 菜单栏
 
@@ -41,13 +41,13 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
 
 ## 工具栏
 
-- <img src='assets/image-20210326011842556.png'/>添加注释：标记接口，或导入导出时候有用，方便别人查看
-- <img src='assets/image-20210326012346285.png'/>重放请求：Shift+R 重放n次，串行的，非并发
-- <img src='assets/image-20210326012605937.png'/>释放断点
-- <img src='assets/image-20210326012648567.png'/>保持的会话个数
-- <img src='assets/image-20210326012722347.png'/>监听进程：点住拖到Chrome上可以只监听Chrome
-- <img src='assets/image-20210326012930052.png'/>清除IE缓存
-- <img src='assets/image-20210326013025362.png'/>文本编码解码器：有URL编码、Base64、MD5等多种
+- <img src='https://z3.ax1x.com/2021/06/10/22iOr6.png'/>添加注释：标记接口，或导入导出时候有用，方便别人查看
+- <img src='https://z3.ax1x.com/2021/06/10/22iXqK.png'/>重放请求：Shift+R 重放n次，串行的，非并发
+- <img src='https://z3.ax1x.com/2021/06/10/22ivVO.png'/>释放断点
+- <img src='https://z3.ax1x.com/2021/06/10/22ixaD.png'/>保持的会话个数
+- <img src='https://z3.ax1x.com/2021/06/10/22izIe.png'/>监听进程：点住拖到Chrome上可以只监听Chrome
+- <img src='https://z3.ax1x.com/2021/06/10/22FpPH.png'/>清除IE缓存
+- <img src='https://z3.ax1x.com/2021/06/10/22F9Gd.png'/>文本编码解码器：有URL编码、Base64、MD5等多种
 
 ## 会话列表
 
@@ -68,9 +68,9 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
 - 黑色命令行：可以执行一些命令操作
   
   - `bpu xxx ：带有xxx的请求都设置断点，不加xxx清除断点
-- <img src='assets/image-20210326014454221.png'/>是否设置代理：即是非启动Fiddler监听
-- <img src='assets/image-20210326014608457.png'/>监控的进程：浏览器、非浏览器、无等
-- <img src='assets/image-20210326014900784.png'/>断点：在进程选择右边，正常是一个空白，点一次设置请求前断点，点两次设置响应后断点
+- <img src='https://z3.ax1x.com/2021/06/10/22FCRA.png'/>是否设置代理：即是非启动Fiddler监听
+- <img src='https://z3.ax1x.com/2021/06/10/22FPxI.png'/>监控的进程：浏览器、非浏览器、无等
+- <img src='https://z3.ax1x.com/2021/06/10/22FFMt.png'/>断点：在进程选择右边，正常是一个空白，点一次设置请求前断点，点两次设置响应后断点
 
 ## 辅助标签&工具
 
@@ -84,7 +84,7 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
   - 使用Fiddler的内置响应
   - 自定义响应
 
-  ![image-20210326020842862](assets/image-20210326020842862.png)
+  ![image-20210326020842862](https://z3.ax1x.com/2021/06/10/22FAqf.png)
 
 - Composer：请求发送器，可自行填写，也可拖动请求到Composer上
 
@@ -109,7 +109,7 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
 
 全局断点的设置如下图所示，两个地方都可以设置，下面状态栏点一下为 Before Requests，两下为After Response， 三下取消
 
-![image-20210327004243758](assets/image-20210327004243758.png)
+![image-20210327004243758](https://z3.ax1x.com/2021/06/10/22FZdS.png)
 
 **2. 局部断点**
 
@@ -125,7 +125,7 @@ Fiddler一打开就会设置一个系统代理，是本机的8888端口， Chrom
 
 ## 弱网测试
 
-![image-20210327010208519](assets/image-20210327010208519.png)
+![image-20210327010208519](https://z3.ax1x.com/2021/06/10/22FeIg.png)
 
 上图中，勾选①处，开启弱网环境。若要自定义弱网程度，点击②处自动打开脚本，查找`m_SimulateModem` 找到如下内容
 
