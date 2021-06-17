@@ -1,4 +1,4 @@
-# 一、RocketMQ核心参数详解
+# 一、生产者核心参数详解
 
 - producerGroup(组名)：在一个应用中唯一，如果启动两个相同名称的producer会报错。
 - createTopic：创建topic，生产中不允许producer直接创建topic

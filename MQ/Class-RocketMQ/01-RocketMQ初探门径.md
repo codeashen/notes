@@ -21,6 +21,8 @@
 * **Consumer Group：**消费者集合，一般用于接受一类消息进行消费。
 * **Broker：**MQ消息服务（中转角色，用于消息存储与生产消息转发）。
 
+参考官方文档：[基本概念](https://github.com/apache/rocketmq/blob/master/docs/cn/concept.md)
+
 # 三、RocketMQ源码包结构
 
 - rocketmq-broker：主要的业务逻辑，消息收发，主从同步，pagecache
