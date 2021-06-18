@@ -43,18 +43,13 @@ consumer.start();
 
 ### Tag过滤
 
-Consumer可以根据Tag进行消息过滤，过滤行为发生在消费的时候。即所有消息都会被消费者消费，但是消费行为consumeMessage方法，只会执行指定tag的消息。
+Consumer端在订阅消息时除了指定Topic还可以指定TAG，如果一个消息有多个TAG，可以用||分隔。其中，Consumer端会将这个订阅请求构建成一个 SubscriptionData，发送一个Pull消息的请求给Broker端。Broker端从RocketMQ的文件存储层—Store读取数据之前，会用这些数据先构建一个MessageFilter，然后传给Store。Store从 ConsumeQueue读取到一条记录后，会用它记录的消息tag hash值去做过滤，由于在服务端只是根据hashcode进行判断，无法精确对tag原始字符串进行过滤，故在消息消费端拉取到消息后，还需要对消息的原始tag字符串进行比对，如果不同，则丢弃该消息，不进行消息消费。
 
-示例流程如下：
+除了tag过滤之外，还有SQL92，具体参考下方链接：
 
-1. 生产者将消息投递到topic的队列中去，如有4个队列
-2. 消费者组有2个消费者A、B，分别订阅tagA和tagB的消息，注册后分别监听队列 {0,1} 和 {2,3}
-3. 到达队列 {0,1} 的消息，无论是什么tag，都会被消费者接收，但是只有tagA的消息会触发消费行为
-4. 集群模式下不清楚每个消息会被投递到哪个队列，所以不能保证tagA的消息都投递到订阅tagA消息的消费者所监听的队列，不符合过滤条件的消息会被丢弃
-
-参考：[官方文档-消息过滤](https://github.com/apache/rocketmq/blob/master/docs/cn/design.md#3-%E6%B6%88%E6%81%AF%E8%BF%87%E6%BB%A4)
-
-> 如果希望消费者订阅不同的tag，且每条消息都能被对应的Consumer消费，需要使用广播模式。
+- [feature-消息过滤](https://github.com/apache/rocketmq/blob/master/docs/cn/features.md#3-%E6%B6%88%E6%81%AF%E8%BF%87%E6%BB%A4)
+- [design-消息过滤](https://github.com/apache/rocketmq/blob/master/docs/cn/design.md#3-%E6%B6%88%E6%81%AF%E8%BF%87%E6%BB%A4)
+- [消息过滤源码分析](https://blog.csdn.net/prestigeding/article/details/79255328)
 
 ## 2.2 广播模式
 
