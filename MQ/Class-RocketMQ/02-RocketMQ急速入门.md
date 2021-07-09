@@ -137,6 +137,11 @@ RocketMQ有四种集群模式
 - 投递一条消息后，关闭主节点，从节点继续可以提供消费者数据进行消费，但是不能接收消息。
 - 主节点上线后进行消费进度offset同步
 
+参考：
+
+- [RocketMQ架构设计](https://github.com/apache/rocketmq/blob/master/docs/cn/architecture.md)
+- [RocketMQ主从消费机制](https://blog.csdn.net/watertofish/article/details/78463617)
+
 ## 3.2 Rocket主从搭建
 
 参考 [RocketMQ环境搭建](01-RocketMQ初探门径#四、RocketMQ环境搭建)，以上述为例，在另一台服务器上搭建从节点broker。
