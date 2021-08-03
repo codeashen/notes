@@ -1,22 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Document</title>
+  <title>Ashen's Note</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
 </head>
+
 <body>
+  <!-- 定制导航栏 -->
+  <nav>
+    <a href="#/docs/">学习笔记</a>
+    <a href="#/books/">读书笔记</a>
+  </nav>
   <div id="app"></div>
+  <!-- 在github编辑 -->
+  <!-- <script src="//unpkg.com/docsify-edit-on-github/index.js"></script> -->
   <script>
     window.$docsify = {
-      name: '',
-      repo: ''
+      name: '<b>Ashen\'s Notes</b>', // 侧边主标题
+      // logo: 'https://docsify.js.org/_media/icon.svg',   // 侧边logo，覆盖标题
+      repo: 'https://github.com/codeashen/Notes.git', // 右上角仓库地址挂件
+      // coverpage: true, // 开启封面，_coverpage.md
+      maxLevel: 4, // 抓取文档标题生成目录的最大级别
+      auto2top: true, //切换页面后是否自动跳转到页面顶部
+      notFoundPage: true, //找不到指定页面时加载_404.md
+      // 搜索配置
+      search: {
+        // maxAge: 86400000, // 过期时间，单位毫秒，默认一天
+        paths: 'auto',
+        placeholder: '搜索',
+        noData: '找不到结果',
+        depth: 3, // 搜索标题的最大程级, 1 - 6
+      },
+      // 字数统计配置
+      count: {
+        countable: true,
+        fontsize: '0.9em',
+        color: 'rgb(90,90,90)',
+        language: 'chinese'
+      },
+      // 翻页配置
+      // pagination: {
+      //   previousText: '上一章节',
+      //   nextText: '下一章节',
+      //   crossChapter: true,
+      //   crossChapterText: true,
+      // },
+      // 在github编辑
+      // plugins: [
+      //   EditOnGithubPlugin.create('https://github.com/Notes/blob/master/')
+      // ],
     }
   </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <!--Java代码高亮-->
+  <script src="//unpkg.com/prismjs/components/prism-java.min.js"></script>
+  <!--全文搜索,直接用官方提供的无法生效-->
+  <script src="https://cdn.bootcss.com/docsify/4.5.9/plugins/search.min.js"></script>
+  <!--谷歌统计  -->
+  <!-- <script src="//unpkg.com/docsify" data-ga="UA-138586553-1"></script>
+  <script src="//unpkg.com/docsify/lib/plugins/ga.js"></script> -->
+  <!-- 复制到剪贴板 -->
+  <script src="//unpkg.com/docsify-copy-code"></script>
+  <!-- 图片缩放 -->
+  <script src="//unpkg.com/docsify/lib/plugins/zoom-image.min.js"></script>
+  <!-- 表情 -->
+  <script src="//unpkg.com/docsify/lib/plugins/emoji.min.js"></script>
+  <!-- 字数统计 -->
+  <script src="//unpkg.com/docsify-count/dist/countable.min.js"></script>
+  <!-- 翻页 -->
+  <!-- <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script> -->
 </body>
+
 </html>

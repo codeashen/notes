@@ -12,7 +12,7 @@
 | Spring Cloud Alibaba | [面向未来微服务:Spring Cloud Alibaba从入门到进阶](https://coding.imooc.com/class/358.html) |  [Note](docs/Java/Class-Spring-Cloud-Alibaba)   | [Java](https://github.com/codeashen/Java-Journey/tree/master/Spring-Cloud-Alibaba) |
 | Linux基础            |                                                              |        [Note](docs/Linux/Note-Linux.md)         |                                                              |
 | Rabbit MQ            | [RabbitMQ消息中间件技术精讲](https://coding.imooc.com/class/262.html) |         [Note](docs/MQ/Class-RabbitMQ)          |                                                              |
-| Nginx                | [Nginx从入门到实践](https://coding.imooc.com/class/121.html) |         [Note](docs/Nginx/Class-Nginx)          |                                                              |
+| Nginx                | [Nginx从入门到实践](https://coding.imooc.com/class/121.html) |         [Note](docs/Nginx/Class-Nginx/第01章-基础篇.md)          |                                                              |
 | Arthas               |                                                              |        [Note](docs/Tool/Tool-Arthas.md)         |                                                              |
 | Fiddler              |                                                              |        [Note](docs/Tool/Tool-Fiddler.md)        |                                                              |
 
