@@ -1,26 +1,46 @@
-## Notes
 
-| 专题                 | 出处                                                         |                    笔记                    |                             代码                             |
-| -------------------- | :----------------------------------------------------------- | :----------------------------------------: | :----------------------------------------------------------: |
-| Elastic Stack        | [Elastic Stack从入门到实践](https://coding.imooc.com/class/181.html) |    [Note](docs/Database/Class-Elastic-Stack)    |                                                              |
-| Redis从入门到高可用  | [一站式学习Redis 从入门到高可用分布式实践](https://coding.imooc.com/class/151.html) | [Note](docs/Database/Class-Redis从入门到高可用) |                                                              |
-| 高性能可扩展MySQL    | [高性能可扩展 MySQL数据库架构设计与优化](https://coding.imooc.com/class/79.html) |  [Note](docs/Database/Class-高性能可扩展MySQL)  |                                                              |
-| 设计模式             | [Java设计模式精讲](https://coding.imooc.com/class/chapter/270.html) |      [Note](docs/Database/Class-设计模式)       | [Java](https://github.com/codeashen/Java-Journey/tree/master/Design-Patterns) |
-| Docker               | [系统学习Docker 践行DevOps理念](https://coding.imooc.com/class/189.html) |        [Node](docs/DevOps/Class-Docker)         |                                                              |
-| Java SE 基础         |                                                              |      [Note](docs/Java/Note-JavaSE-Base.md)      |                                                              |
-| Spring Cloud         | [深度解锁SpringCloud主流组件 一战解决微服务诸多难题](https://coding.imooc.com/class/396.html) |      [Note](docs/Java/Class-Spring-Cloud)       | [Java](https://github.com/codeashen/Project-Journey/tree/master/Movie-Cloud) |
-| Spring Cloud Alibaba | [面向未来微服务:Spring Cloud Alibaba从入门到进阶](https://coding.imooc.com/class/358.html) |  [Note](docs/Java/Class-Spring-Cloud-Alibaba)   | [Java](https://github.com/codeashen/Java-Journey/tree/master/Spring-Cloud-Alibaba) |
-| Linux基础            |                                                              |        [Note](docs/Linux/Note-Linux.md)         |                                                              |
-| Rabbit MQ            | [RabbitMQ消息中间件技术精讲](https://coding.imooc.com/class/262.html) |         [Note](docs/MQ/Class-RabbitMQ)          |                                                              |
-| Nginx                | [Nginx从入门到实践](https://coding.imooc.com/class/121.html) |         [Note](docs/Nginx/Class-Nginx/第01章-基础篇.md)          |                                                              |
-| Arthas               |                                                              |        [Note](docs/Tool/Tool-Arthas.md)         |                                                              |
-| Fiddler              |                                                              |        [Note](docs/Tool/Tool-Fiddler.md)        |                                                              |
+[在线阅读](https://codeashen.github.io/Notes/)
 
-## Books
+## 学习笔记
+
+### Java
+
+- [JavaSE基础](docs/Java/Note-JavaSE-Base.md)
+- [Java设计模式精讲](docs/Database/Class-设计模式) [代码](https://github.com/codeashen/Java-Journey/tree/master/Design-Patterns) [课程](https://coding.imooc.com/class/chapter/270.html)
+
+### 数据库
+
+- [ElasticStack从入门到实践](docs/Database/Class-Elastic-Stack) [课程](https://coding.imooc.com/class/181.html)
+- [一站式学习Redis从入门到高可用分布式实践](docs/Database/Class-Redis从入门到高可用) [课程](https://coding.imooc.com/class/151.html) 
+- [高性能可扩展MySQL数据库架构设计与优化](docs/Database/Class-高性能可扩展MySQL)   [课程](https://coding.imooc.com/class/79.html)
+
+### 中间件
+
+- [RabbitMQ消息中间件技术精讲](docs/MQ/Class-RabbitMQ)   [课程](https://coding.imooc.com/class/262.html) 
+- [Nginx从入门到实践](docs/Nginx/Class-Nginx/第01章-基础篇.md)  [课程](https://coding.imooc.com/class/121.html) 
+
+### 微服务
+
+- [深度解锁SpringCloud主流组件一战解决微服务诸多难题](docs/Java/Class-Spring-Cloud) [代码](https://github.com/codeashen/Project-Journey/tree/master/Movie-Cloud)  [课程](https://coding.imooc.com/class/396.html)
+- [面向未来微服务:SpringCloudAlibaba从入门到进阶](docs/Java/Class-Spring-Cloud-Alibaba) [代码](https://github.com/codeashen/Java-Journey/tree/master/Spring-Cloud-Alibaba) [课程](https://coding.imooc.com/class/358.html) 
+
+### DevOps
+
+- [系统学习Docker践行DevOps理念](docs/DevOps/Class-Docker)  [课程](https://coding.imooc.com/class/189.html)
+
+### 计算机基础
+
+- [Linux基础](docs/Linux/Note-Linux.md)  
+
+### 工具
+- [Arthas](docs/Tool/Tool-Arthas.md)  
+- [Fiddler](docs/Tool/Tool-Fiddler.md)  
+
+## 读书笔记
 
 - [Java数据结构和算法](docs/Data%20Structures%20&%20Algorithms/Book-Java数据结构和算法.md)
 - [我的第一本算法书](docs/Data%20Structures%20&%20Algorithms/Book-我的第一本算法书.md)
-- [On Java 8](docs/Java/Book-On-Java-8.md)
+- [On Java8](docs/Java/Book-On-Java-8.md)
 - [深入理解Java虚拟机](docs/Java/Book-深入理解Java虚拟机.md)
 - [Rocket实战指南](docs/MQ/Book-RabbitMQ实战指南.md)
 - [图解HTTP](docs/Network/Book-图解HTTP.md)
@@ -30,4 +50,4 @@
 
 ## License
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可。
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png"/></a><br/>本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用4.0国际许可协议</a>进行许可。
