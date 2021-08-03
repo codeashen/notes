@@ -6,27 +6,27 @@
 ### Java
 
 - [JavaSE基础](docs/Java/Note-JavaSE-Base.md)
-- [Java设计模式精讲](docs/Database/Class-设计模式) [代码](https://github.com/codeashen/Java-Journey/tree/master/Design-Patterns) [课程](https://coding.imooc.com/class/chapter/270.html)
+- [Java设计模式精讲](docs/Database/Class-设计模式) [`代码`](https://github.com/codeashen/Java-Journey/tree/master/Design-Patterns) [`课程`](https://coding.imooc.com/class/chapter/270.html)
 
 ### 数据库
 
-- [ElasticStack从入门到实践](docs/Database/Class-Elastic-Stack) [课程](https://coding.imooc.com/class/181.html)
-- [一站式学习Redis从入门到高可用分布式实践](docs/Database/Class-Redis从入门到高可用) [课程](https://coding.imooc.com/class/151.html) 
-- [高性能可扩展MySQL数据库架构设计与优化](docs/Database/Class-高性能可扩展MySQL)   [课程](https://coding.imooc.com/class/79.html)
+- [ElasticStack从入门到实践](docs/Database/Class-Elastic-Stack) [`课程`](https://coding.imooc.com/class/181.html)
+- [一站式学习Redis从入门到高可用分布式实践](docs/Database/Class-Redis从入门到高可用) [`课程`](https://coding.imooc.com/class/151.html) 
+- [高性能可扩展MySQL数据库架构设计与优化](docs/Database/Class-高性能可扩展MySQL)   [`课程`](https://coding.imooc.com/class/79.html)
 
 ### 中间件
 
-- [RabbitMQ消息中间件技术精讲](docs/MQ/Class-RabbitMQ)   [课程](https://coding.imooc.com/class/262.html) 
-- [Nginx从入门到实践](docs/Nginx/Class-Nginx/第01章-基础篇.md)  [课程](https://coding.imooc.com/class/121.html) 
+- [RabbitMQ消息中间件技术精讲](docs/MQ/Class-RabbitMQ)   [`课程`](https://coding.imooc.com/class/262.html) 
+- [Nginx从入门到实践](docs/Nginx/Class-Nginx/第01章-基础篇.md)  [`课程`](https://coding.imooc.com/class/121.html) 
 
 ### 微服务
 
-- [深度解锁SpringCloud主流组件一战解决微服务诸多难题](docs/Java/Class-Spring-Cloud) [代码](https://github.com/codeashen/Project-Journey/tree/master/Movie-Cloud)  [课程](https://coding.imooc.com/class/396.html)
-- [面向未来微服务:SpringCloudAlibaba从入门到进阶](docs/Java/Class-Spring-Cloud-Alibaba) [代码](https://github.com/codeashen/Java-Journey/tree/master/Spring-Cloud-Alibaba) [课程](https://coding.imooc.com/class/358.html) 
+- [深度解锁SpringCloud主流组件一战解决微服务诸多难题](docs/Java/Class-Spring-Cloud) [`代码`](https://github.com/codeashen/Project-Journey/tree/master/Movie-Cloud)  [`课程`](https://coding.imooc.com/class/396.html)
+- [面向未来微服务:SpringCloudAlibaba从入门到进阶](docs/Java/Class-Spring-Cloud-Alibaba) [`代码`](https://github.com/codeashen/Java-Journey/tree/master/Spring-Cloud-Alibaba) [`课程`](https://coding.imooc.com/class/358.html) 
 
 ### DevOps
 
-- [系统学习Docker践行DevOps理念](docs/DevOps/Class-Docker)  [课程](https://coding.imooc.com/class/189.html)
+- [系统学习Docker践行DevOps理念](docs/DevOps/Class-Docker)  [`课程`](https://coding.imooc.com/class/189.html)
 
 ### 计算机基础
 
