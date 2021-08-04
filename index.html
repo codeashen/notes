@@ -26,8 +26,9 @@
       repo: 'https://github.com/codeashen/Notes.git', // 右上角仓库地址挂件
       // coverpage: true, // 开启封面，_coverpage.md
       maxLevel: 4, // 抓取文档标题生成目录的最大级别
-      auto2top: true, //切换页面后是否自动跳转到页面顶部
-      notFoundPage: true, //找不到指定页面时加载_404.md
+      auto2top: true, // 切换页面后是否自动跳转到页面顶部
+      notFoundPage: true, // 找不到指定页面时加载_404.md
+      loadNavbar: true, // 加载定制导航栏，各目录下的_navbar.md
       // 搜索配置
       search: {
         // maxAge: 86400000, // 过期时间，单位毫秒，默认一天
@@ -43,6 +44,26 @@
         color: 'rgb(90,90,90)',
         language: 'chinese'
       },
+      // markdown解析配置
+      markdown: {
+        renderer: { // 渲染器
+          link: function (href, title, text) { // 链接渲染
+            // 如果是http链接，直接新标签页打开
+            if (href.startsWith('http')) {
+              return `<a href='${href}' target='_blank'>${text}</a>`
+            }
+            if (href.startsWith('#/')) {
+              return `<a href='${href}'>${text}</a>`
+            }
+            // 移除.md后缀，可选
+            href.endsWith('.md') && (href = href.substr(0, href.lastIndexOf('.md')))
+            // href拼接当前地址
+            const currentUri = document.location.hash
+            href = currentUri.substr(0, currentUri.lastIndexOf('/') + 1) + href
+            return `<a href='${href}'>${text}</a>`
+          },
+        }
+      }
       // 翻页配置
       // pagination: {
       //   previousText: '上一章节',
