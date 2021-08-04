@@ -16,7 +16,7 @@
 
 ### 中间件
 
-- [RabbitMQ消息中间件技术精讲](docs/MQ/Class-RabbitMQ)   [`课程`](https://coding.imooc.com/class/262.html) 
+- [RabbitMQ消息中间件技术精讲](docs/MQ/Class-RabbitMQ/)   [`课程`](https://coding.imooc.com/class/262.html) 
 - [Nginx从入门到实践](docs/Nginx/Class-Nginx/第01章-基础篇.md)  [`课程`](https://coding.imooc.com/class/121.html) 
 
 ### 微服务
