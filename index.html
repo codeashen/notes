@@ -16,7 +16,9 @@
     <a href="#/?id=学习笔记">学习笔记</a>
     <a href="#/?id=读书笔记">读书笔记</a>
   </nav>
-  <div id="app"></div>
+  <!-- 自己加的回到顶部按钮 -->
+  <img id="toTop" src="image/toTop.png" style="position:fixed;right:10px;bottom:13px;;z-index:9999" width="20px" />
+  <div id="app">加载中...</div>
   <!-- 在github编辑 -->
   <!-- <script src="//unpkg.com/docsify-edit-on-github/index.js"></script> -->
   <script>
@@ -63,7 +65,7 @@
             return `<a href='${href}'>${text}</a>`
           },
         }
-      }
+      },
       // 翻页配置
       // pagination: {
       //   previousText: '上一章节',
@@ -71,16 +73,27 @@
       //   crossChapter: true,
       //   crossChapterText: true,
       // },
-      // 在github编辑
-      // plugins: [
-      //   EditOnGithubPlugin.create('https://github.com/Notes/blob/master/')
-      // ],
+      plugins: [
+        function (hook) {
+          hook.afterEach(function (html) {
+            const footer = [
+              '<hr>',
+              '<footer>',
+              '<span>Copyright © 2020-2021 <a href="https://github.com/codeashen" target="_blank">CodeAshen</a>. All rights reserved.',
+              "</footer>",
+            ].join('');
+            return html + footer;
+          });
+        }
+      ],
+    }
+    // 回到顶部方法
+    toTop.onclick = function () {
+      scrollTo(0, 0);
     }
   </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <!--Java代码高亮-->
-  <script src="//unpkg.com/prismjs/components/prism-java.min.js"></script>
   <!--全文搜索,直接用官方提供的无法生效-->
   <script src="https://cdn.bootcss.com/docsify/4.5.9/plugins/search.min.js"></script>
   <!--谷歌统计  -->
@@ -96,6 +109,11 @@
   <script src="//unpkg.com/docsify-count/dist/countable.min.js"></script>
   <!-- 翻页 -->
   <!-- <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script> -->
+
+  <!-- 代码高亮支持 -->
+  <script src="//unpkg.com/prismjs/components/prism-java.min.js"></script>
+  <script src="//unpkg.com/prismjs/components/prism-nginx.min.js"></script>
+  <script src="//unpkg.com/prismjs/components/prism-bash.min.js"></script>
 </body>
 
 </html>
