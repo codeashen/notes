@@ -4,11 +4,11 @@ Mapping 类似数据库中的表结构定义，主要作用如下：
 
 * 定义 Index 下的字段名（Field Name）
 * 定义字段的类型，比如数值型、字符串型、布尔型等
-* 定义倒排索引相关的配置，比如是否索引、记录 position等
+* 定义倒排索引相关的配置，比如是否索引、记录 position 等
 
 ![image-20201224003619215](https://s3.ax1x.com/2020/12/24/rcJoAH.png)
 
-自定义Mapping
+自定义 Mapping
 
 ![image-20201224003751552](https://s3.ax1x.com/2020/12/24/rcJTNd.png)
 
@@ -16,11 +16,11 @@ Mapping 类似数据库中的表结构定义，主要作用如下：
 
 #### dynamic
 
-* Mapping中的字段类型一旦设定后，禁止直接修改，原因是Lucene实现的倒排索引生成后不允许修改
+* Mapping 中的字段类型一旦设定后，禁止直接修改，原因是 Lucene 实现的倒排索引生成后不允许修改
 
-* 重新建立新的索引，然后做reindex操作重新导入文档
+* 重新建立新的索引，然后做 reindex 操作重新导入文档
 
-* 允许新增字段通过**dynamic**参数来控制字段的新增
+* 允许新增字段通过 `dynamic` 参数来控制字段的新增
 
     * **true**：(默认)允许自动新增字段
     * **false**：不允许自动新增字段，但是文档可以正常写入，但无法对字段进行查询等操作
@@ -39,8 +39,8 @@ Mapping 类似数据库中的表结构定义，主要作用如下：
 
 #### index
 
-* 控制当前字段是否索引，默认为true，即记录索引，false不记录，即不可搜索
-* 不用来检索的字段可以设置成false，不生成倒排索引，会节省空间
+* 控制当前字段是否索引，默认为 true，即记录索引，false 不记录，即不可搜索
+* 不用来检索的字段可以设置成 false，不生成倒排索引，会节省空间
 
 ![image-20201225003359686](https://s3.ax1x.com/2020/12/25/rRELqI.png)
 
@@ -49,19 +49,17 @@ Mapping 类似数据库中的表结构定义，主要作用如下：
 index_options 用于控制倒排索引记录的内容，有如下4种配置
 
 * **docs**： 只记录 doc id
-* **freqs** ：记录 doc id 和 term frequencies (词频)
+* **freqs**：记录 doc id 和 term frequencies (词频)
 * **positions**：记录 doc id、term frequencies 和 term position (位置)
-* **offsets** ：记录doc id、term frequencies、term position 和 character offsets (开始结束位置)
+* **offsets**：记录doc id、term frequencies、term position 和 character offsets (开始结束位置)
 
-text 类型默认配置为 positions，其他默认为 docs
-
-记录内容越多，占用空间越大
+text 类型默认配置为 positions，其他默认为 docs。记录内容越多，占用空间越大。
 
 ![image-20201225004617196](https://s3.ax1x.com/2020/12/25/rREXZt.png)
 
 #### null_value
 
-当字段遇到null 值时的处理策略，默认为null，即空值，此时es会忽略该值。可以通过设定该值设定字段的默认值
+当字段遇到 null 值时的处理策略，默认为 null，即空值，此时 es 会忽略该值。可以通过设定该值设定字段的默认值
 
 ![image-20201225004646636](https://s3.ax1x.com/2020/12/25/rREvIf.png)
 
@@ -78,27 +76,27 @@ text 类型默认配置为 positions，其他默认为 docs
 
 **复杂数据类型**
 
-* 数组类型 array：无需指定为数组，只需要放入数组的元素符合该字段数据类型即可，即integer类型字段可以存放integer数组
+* 数组类型 array：无需指定为数组，只需要放入数组的元素符合该字段数据类型即可，即 integer 类型字段可以存放 integer 数组
 * 对象类型 object
 * 嵌套类型 nested object：和前者的区别的这些文档会特殊处理，不会和父文档混在一起，是独立存在的
 
 **地理位置数据类型**
 
 * geo_point
-* geo_ shape
+* geo_shape
 
 **专用类型**
 
 * ip：记录ip地址
 * completion：实现自动补全
-* token_count：记录分次数
+* token_count：记录分词数
 * murmur3：记录字符串hash值
 * percolator
 * join：做子查询用
 
 **多字段特性 multi-fields**
 
-允许对同一个字段采用不同的配置，比如分词，常见例子如对人名实现拼音搜索，只需要在人名中新增一个子字段为pinyin即可
+允许对同一个字段采用不同的配置，比如分词，常见例子如对人名实现拼音搜索，只需要在人名中新增一个子字段为 pinyin 即可
 
 ![image-20201225010451559](https://s3.ax1x.com/2020/12/25/rREzi8.png)
 
@@ -106,11 +104,11 @@ text 类型默认配置为 positions，其他默认为 docs
 
 #### 自动识别
 
-es可以自动识别文档字段类型，从而降低用户使用成本，如下所示
+es 可以自动识别文档字段类型，从而降低用户使用成本，如下所示
 
 ![image-20201225010752220](https://s3.ax1x.com/2020/12/25/rRVSJS.png)
 
-es是依靠JSON文档的字段类型来实现自动识别字段类型，支持的类型如下：
+es 是依靠 JSON 文档的字段类型来实现自动识别字段类型，支持的类型如下：
 
 ![image-20201225010926671](https://s3.ax1x.com/2020/12/25/rRVpRg.png)
 
@@ -142,43 +140,43 @@ es是依靠JSON文档的字段类型来实现自动识别字段类型，支持�
 
 ### 1.3.5 Dynamic Template
 
-允许根据es自动识别的数据类型、字段名等来动态设定字段类型，可以实现如下效果：
+允许根据 es 自动识别的数据类型、字段名等来动态设定字段类型，可以实现如下效果：
 
-* 所有字符串类型都设定为keyword类型，即默认不分词
-* 所有以 message 开头的字段都设定为text类型，即分词
-* 所有以 long_ 开头的字段都设定为long类型
-* 所有自动匹配为double类型的都设定为float类型，以节省空间
+* 所有字符串类型都设定为 keyword 类型，即默认不分词
+* 所有以 message 开头的字段都设定为 text 类型，即分词
+* 所有以 long_ 开头的字段都设定为 long 类型
+* 所有自动匹配为 double 类型的都设定为 float 类型，以节省空间
 
 匹配规则一般有如下几个参数：
 
-* match_mapping_type 匹配es 自动识别的字段类型，如boolean、long、string等
+* match_mapping_type 匹配 es 自动识别的字段类型，如 boolean、long、string 等
 * match，unmatch 匹配字段名
 * path_match，path unmatch 匹配路径
 
-下面示例就是实现了上述第一点，创建一个索引，改索引将String都设置为keyword：
+下面示例就是实现了上述第一点，创建一个索引，改索引将 String 都设置为 keyword：
 
 ![image-20201225012624670](https://s3.ax1x.com/2020/12/25/rRViss.png)
 
-以message开头的字段都设置为text类型：
+以 message 开头的字段都设置为 text 类型：
 
 ![image-20201225013052799](https://s3.ax1x.com/2020/12/25/rRVFLn.png)
 
-自定义Mapping的操作步骤建议如下：
+自定义 Mapping 的操作步骤建议如下：
 
-1. 写入一条文档到es的临时索引中，获取es自动生成的mapping
-2. 修改步骤1得到的mapping，自定义相关配置
-3. 使用步骤2的mapping 创建实际所需索引
+1. 写入一条文档到 es 的临时索引中，获取 es 自动生成的 mapping
+2. 修改步骤1得到的 mapping，自定义相关配置
+3. 使用步骤2的 mapping 创建实际所需索引
 
 ### 1.3.6 索引模板
 
-索引模板，英文为Index Template，主要用于在新建索引时自动应用预先设定的配置，简化索引创建的操作步骤
+索引模板，英文为 Index Template，主要用于在新建索引时自动应用预先设定的配置，简化索引创建的操作步骤。创建规则如下：
 
-* 可以设定索引的配置和mapping
-* 可以有多个模板，根据 order设置，order大的覆盖小的配置
+* 可以设定索引的配置和 mapping
+* 可以有多个模板，根据 order 设置，order 大的覆盖小的配置
 
-索引模板API，endpoint为 `_template`，如下所示：
+索引模板 endpoint 为 `_template`，如下所示：
 
-**创建索引模板**
+**创建索引模板**，即创建索引模板后，以后创建不指定设置，会采用匹配的索引模板设置（实际用处不大，很少有用的）。
 
 ![image-20201225013813823](https://s3.ax1x.com/2020/12/25/rRVAZq.png)
 
@@ -188,10 +186,10 @@ es是依靠JSON文档的字段类型来实现自动识别字段类型，支持�
 
 **示例**
 
-创建两个模板
+1.创建两个模板
 
 ![image-20201225014216422](https://s3.ax1x.com/2020/12/25/rRVVoV.png)
 
-创建索引，查看结构
+2. 创建索引，查看结构
 
 ![image-20201225014316967](https://s3.ax1x.com/2020/12/25/rRVeiT.png)

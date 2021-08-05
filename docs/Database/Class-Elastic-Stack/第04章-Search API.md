@@ -1,25 +1,25 @@
-### 1.4.1 Search API概览
+### 1.4.1 Search API 概览
 
-实现对es中存储的数据进行查询分析，endpoint为_search，如下所示：
+实现对 es 中存储的数据进行查询分析，endpoint 为 `_search`，如下所示：
 
 ![image-20201226175946805](https://s3.ax1x.com/2020/12/28/r7aXDK.png)
 
 查询主要有两种形式
 
 * **URI Search**：操作简便，方便通过命令行测试，仅包含部分查询语法
-* **Request Body Search**：es提供的完备查询语法Query DSL(Domain Specific Language)
+* **Request Body Search**：es 提供的完备查询语法 Query DSL (Domain Specific Language)
 
 ![image-20201226180123424](https://s3.ax1x.com/2020/12/28/r7ajHO.png)
 
 ### 1.4.2 URI Search
 
-通过url query参数来实现搜索，常用参数如下：
+通过 url query 参数来实现搜索，常用参数如下：
 
-* q：指定查询的语句，语法为Query String Syntax
-* df： q中不指定字段时默认查询的字段，如果不指定，es会查询所有字段
-* sort： 排序
-* timeout： 指定超时时间，默认不超时
-* from,size： 用于分页
+* `q`：指定查询的语句，语法为 Query String Syntax
+* `df`：q 中不指定字段时默认查询的字段，如果不指定，es 会查询所有字段
+* `sort`：排序
+* `from`, `size`：用于分页
+* `timeout`：指定超时时间，默认不超时
 
 ![image-20201226180557610](https://s3.ax1x.com/2020/12/28/r7azUe.png)
 
@@ -27,18 +27,18 @@
 
 **匹配规则**
 
-* term与phrase：
+* term 与 phrase：
 
   ```
-  q=alfred way    等效于alfred OR way
+  q=alfred way    等效于 alfred OR way
   q="alfred way"  词语查询，要求先后顺序
   ```
 
-* 泛查询：`q=alfred` 等效于在所有字段去匹配该term
+* 泛查询：`q=alfred` 等效于在所有字段去匹配该 term
 
 * 指定字段：`q=name:alfred`
 
-* Group分组设定：使用括号指定匹配的规则
+* Group 分组设定：使用括号指定匹配的规则
 
   ```
   q=(quick OR brown) AND fox 
@@ -53,29 +53,29 @@
 
 **布尔操作符**
 
-* AND(&&),OR(I),NOT(!)
+* AND(&&), OR(|), NOT(!)
 
   ```
   q=name:(tom NOT lee)   注意大写，不能小写
   ```
 
-* `+` `-` 分别对应 must 和must_not
+* `+` `-` 分别对应 must 和 must_not
 
   ```
-  q=name:(tom +lee-alfred)`，`q=name:(lee &&lalfred)l|(tom && lee &&lalfred))`
+  q=name:(tom+lee-alfred)`，`q=name:(lee&&lalfred)|(tom&&lee&&lalfred))`
   ```
 
-  > `+` 在url中会被解析为空格，要使用encode后的结果才可以，为 `%2B`
+  > `+` 在 url 中会被解析为空格，要使用 encode 后的结果才可以，为 `%2B`
 
 **范围查询，支持数值和日期**
 
-* 区间写法，闭区间用`[]`，开区间用 `{}`
+* 区间写法，闭区间用 `[]`，开区间用 `{}`
 
   ```
-  age:[1 TO 10]  意为1<=age<=10
-  age:[1 TO 10}  意为1<=age<10
-  age:[1 TO]     意为age>=1
-  age:[* TO 10]  意为age<=10
+  age:[1 TO 10]  意为 1<=age<=10
+  age:[1 TO 10}  意为 1<=age<10
+  age:[1 TO]     意为 age>=1
+  age:[* TO 10]  意为 age<=10
   ```
 
 * 算数符号写法
@@ -103,19 +103,19 @@
 
 `name:/[mb]oat/`
 
-**模糊匹配fuzzy query **
+**模糊匹配 fuzzy query**
 
-`name:roam~1`   ： 匹配与roam差1个character的词，比如foam、roams等
+`name:roam~1`：匹配与 roam 差 1 个 character 的词，比如 foam、roams 等
 
 **近似度查询 proximity search**
 
-`"fox quick"~5`  ： 以term为单位进行差异比较，比如"quick fox"，"quick brown fox”都会被匹配
+`"fox quick"~5`：以 term 为单位进行差异比较，比如 "quick fox"，"quick brown fox" 都会被匹配
 
 ### 1.4.3 Request Body Search
 
-将查询语句通过http request body发送到es，主要包含如下参数
+将查询语句通过 http request body 发送到 es，主要包含如下参数
 
-* query：符合Query DSL语法的查询语句
+* query：符合 Query DSL 语法的查询语句
 * from、size、timeout、sort 等等
 
 #### Query DSL
@@ -129,8 +129,8 @@
 
 字段类查询主要包括以下两类：
 
-* **全文匹配**：针对text 类型的字段进行全文检索，会对查询语句先进行分词处理，如 match，match_phrase 等query类型
-* **单词匹配**：不会对查询语句做分词处理，直接去匹配字段的倒排索引，如 term，terms，range 等query类型
+* **全文匹配**：针对 text 类型的字段进行全文检索，会对查询语句先进行分词处理，如 match，match_phrase 等 query 类型
+* **单词匹配**：不会对查询语句做分词处理，直接去匹配字段的倒排索引，如 term，terms，range 等 query 类型
 
 #### Match Query
 
@@ -138,29 +138,27 @@
 
 ![image-20201226192654312](https://s3.ax1x.com/2020/12/28/r7divt.png)
 
-
-
 ![image-20201226192834774](https://s3.ax1x.com/2020/12/28/r7dkKP.png)
 
 * Match Query具体流程如下
 
 ![image-20201226193018447](https://s3.ax1x.com/2020/12/28/r7dEb8.png)
 
-* 通过 **operator** 参数可以控制单词间的匹配关系，可选项为or和and
+* 通过 **operator** 参数可以控制单词间的匹配关系，可选项为 `or` 和 `and`
 
-  > 以下示例表示 文档中alfred和way必须同时存在
+  > 以下示例表示 文档中 alfred 和 way 必须同时存在
 
 ![image-20201226193147450](https://s3.ax1x.com/2020/12/28/r7deUg.png)
 
 * 通过 **minimum_should_match** 参数可以控制需要匹配的单词数
 
-  > 以下示例标识 文档最少含有条件中的两个单词
+  > 以下示例表示 文档最少含有条件中的两个单词
 
 ![image-20201226193340270](https://s3.ax1x.com/2020/12/28/r7dM2n.png)
 
 #### 相关性算分
 
-相关性算分是指文档与查询语句间的相关度，英文为relevance，通过倒排索引可以获取与查询语句相匹配的文档列表，那么如何**将最符合用户查询需求的文档放到前列**呢？本质是一个排序问题，排序的依据是相关性算分。
+相关性算分是指文档与查询语句间的相关度，英文为 relevance，通过倒排索引可以获取与查询语句相匹配的文档列表，那么如何 **将最符合用户查询需求的文档放到前列** 呢？本质是一个排序问题，排序的依据是相关性算分。
 
 ![image-20201226193837601](https://s3.ax1x.com/2020/12/28/r7dQvq.png)
 
@@ -173,31 +171,31 @@
 
 ES目前主要有两个相关性算分模型，如下：
 
-1. **TF/IDF模型**
-2. **BM25模型**，5.x之后的默认模型
+1. **TF/IDF 模型**
+2. **BM25 模型**，5.x 之后的默认模型
 
-**TF/IDF模型** 是Lucene的经典模型，其计算公式如下
+**TF/IDF 模型** 是 Lucene 的经典模型，其计算公式如下
 
 ![image-20201226194233000](https://s3.ax1x.com/2020/12/28/r7d1K0.png)
 
-可以通过explain参数来查看具体的计算方法，但要注意：
+可以通过 explain 参数来查看具体的计算方法，但要注意：
 
-* es的算分是按照shard进行的，即shard的分数计算是相互独立的，所以在使用explain的时候注意分片数。
-* 可以通过设置索引的分片数为1来避免这个问题
+* es 的算分是按照 shard 进行的，即 shard 的分数计算是相互独立的，所以在使用 explain 的时候注意分片数。
+* 可以通过设置索引的分片数为 1 来避免这个问题
 
 ![image-20201226200524827](https://s3.ax1x.com/2020/12/28/r7d3rV.png)
 
-**BM25模型** 中BM指Best Match，25指迭代了25次才计算方法，是针对TF/IDF的一个优化，其计算公式如下：
+**BM25 模型** 中 BM 指 Best Match，25 指迭代了 25 次才计算方法，是针对 TF/IDF 的一个优化，其计算公式如下：
 
 ![image-20201226200737542](https://s3.ax1x.com/2020/12/28/r7d8bT.png)
 
-BM25相比TF/IDF的一大优化是降低了TF（词频）在过大时的权重
+BM25 相比 TF/IDF 的一大优化是降低了 TF（词频）在过大时的权重
 
 ![image-20201226200925270](https://s3.ax1x.com/2020/12/28/r7dJVU.png)
 
 #### Match Phrase Query
 
-**对字段作检索，有顺序要求**，API示例如下：
+**对字段作检索，有顺序要求**，API 示例如下：
 
 ![image-20201226201007930](https://s3.ax1x.com/2020/12/28/r7dYaF.png)
 
@@ -213,23 +211,21 @@ BM25相比TF/IDF的一大优化是降低了TF（词频）在过大时的权重
 
 #### Query String Query
 
-类似于URI Search中的q参数查询
+类似于 URI Search 中的 q 参数查询
 
 ![image-20201226201542037](https://s3.ax1x.com/2020/12/28/r7dBKx.png)
 
 ![image-20201226201740320](https://s3.ax1x.com/2020/12/28/r7drqK.png)
 
-
-
 #### Simple Query String Query
 
-类似Query String，但是会忽略错误的查询语法，并且仅支持部分查询语法
+类似 Query String，但是会忽略错误的查询语法，并且仅支持部分查询语法
 
-其常用的逻辑符号如下，不能使用AND、OR、NOT等关键词：
+其常用的逻辑符号如下，不能使用 AND、OR、NOT 等关键词：
 
 * `+` 代指 AND
 * `|` 代指 OR
-* `-` 代指 NOT-
+* `-` 代指 NOT
 
 ![image-20201226201923225](https://s3.ax1x.com/2020/12/28/r7dyVO.png)
 
@@ -239,7 +235,7 @@ BM25相比TF/IDF的一大优化是降低了TF（词频）在过大时的权重
 
 ![image-20201226202151991](https://s3.ax1x.com/2020/12/28/r7dcIe.png)
 
-使用**terms**一次传入多个单词进行查询，如下所示：
+使用 `terms` 一次传入多个单词进行查询，如下所示：
 
 ![image-20201226202244803](https://s3.ax1x.com/2020/12/28/r7d2PH.png)
 
@@ -257,9 +253,9 @@ BM25相比TF/IDF的一大优化是降低了TF（词频）在过大时的权重
 
 ![image-20201226202553652](https://s3.ax1x.com/2020/12/28/r7dfxI.png)
 
-主要时间单位：y-years，M-months，w-weeks，d-days，h-hours，m-minutes，s-seconds
+> 主要时间单位：y-years，M-months，w-weeks，d-days，h-hours，m-minutes，s-seconds
 
-假设now为2018-01-0212：00：00，那么如下的计算结果实际为：
+假设 `now` 为 `2018-01-02 12:00:00`，那么如下的计算结果实际为：
 
 ![image-20201226202813590](https://s3.ax1x.com/2020/12/28/r7d4Mt.png)
 
@@ -275,7 +271,7 @@ BM25相比TF/IDF的一大优化是降低了TF（词频）在过大时的权重
 
 #### constant_score query
 
-该查询将其内部的查询结果文档得分都设定为1或者boost的值，多用于结合bool查询实现自定义得分
+该查询将其内部的查询结果文档得分都设定为 1 或者 boost 的值，多用于结合 bool 查询实现自定义得分
 
 ![image-20201226203228938](https://s3.ax1x.com/2020/12/29/r76o5V.png)
 
@@ -290,14 +286,14 @@ BM25相比TF/IDF的一大优化是降低了TF（词频）在过大时的权重
 | must_not | 文档必须不符合 must_not 中的所有条件，不会影响相关性得分 |
 | should   | 文档可以符合 should 中的条件，会影响相关性得分           |
 
-Bool 查询的API如下所示
+Bool 查询的 API 如下所示
 
 ![image-20201226203635765](https://s3.ax1x.com/2020/12/29/r76H8U.png)
 
 **Filter** 查询只过滤符合条件的文档，不会进行相关性算分
 
-* es针对flter会有智能缓存，因此其执行效率很高
-* 做简单匹配查询且不考虑算分时，推荐使用 filter 替代query等
+* es 针对 filter 会有智能缓存，因此其执行效率很高
+* 做简单匹配查询且不考虑算分时，推荐使用 filter 替代 query 等
 
 ![image-20201226203803009](https://s3.ax1x.com/2020/12/29/r76OKJ.png)
 
@@ -313,22 +309,22 @@ Bool 查询的API如下所示
 
 should 使用分两种情况：
 
-1. bool查询中只包含should，不包含must查询
-2. bool 查询中同时包含should和must查询
+1. bool 查询中只包含 should，不包含 must 查询
+2. bool 查询中同时包含 should 和 must 查询
 
-只包含should时，文档必须满足至少一个条件
+只包含 should 时，文档必须满足至少一个条件
 
 > minimum should_match 可以控制满足条件的个数或者百分比
 
 ![image-20201226204204838](https://s3.ax1x.com/2020/12/29/r76zUx.png)
 
-同时包含should和must时，文档不必满足should中的条件，但是如果满足条件，会增加相关性得分
+同时包含 should 和 must 时，文档不必满足 should 中的条件，但是如果满足条件，会增加相关性得分
 
 ![image-20201226204303800](https://s3.ax1x.com/2020/12/29/r7cC8O.png)
 
 #### Query Context VS Filter Context
 
-当一个查询语句位于Query 或者Filter上下文时，es执行的结果会不同，对比如下：
+当一个查询语句位于 Query 或者 Filter 上下文时，es 执行的结果会不同，对比如下：
 
 ![image-20201226204502324](https://s3.ax1x.com/2020/12/29/r7c9PK.png)
 
@@ -338,12 +334,12 @@ should 使用分两种情况：
 
 #### Count API
 
-获取符合条件的文档数，endpoint为 `_count`
+获取符合条件的文档数，endpoint 为 `_count`
 
 ![image-20201226204633445](https://s3.ax1x.com/2020/12/29/r7cixe.png)
 
 #### Source Filtering
 
-过滤返回结果中_source中的字段，主要有如下几种方式：
+过滤返回结果中 `_source` 中的字段，主要有如下几种方式：
 
 ![image-20201226204730854](https://s3.ax1x.com/2020/12/29/r7cP2D.png)
