@@ -1,8 +1,8 @@
-### 1.3.1 Mapping介绍
+### 1.3.1 Mapping 介绍
 
 Mapping 类似数据库中的表结构定义，主要作用如下：
 
-* 定义Index下的字段名（Field Name）
+* 定义 Index 下的字段名（Field Name）
 * 定义字段的类型，比如数值型、字符串型、布尔型等
 * 定义倒排索引相关的配置，比如是否索引、记录 position等
 

@@ -1,6 +1,6 @@
-## 1.1 Elasticsearch 篇之 入门
+## 1.1 Elasticsearch 入门
 
-### 1.1.1 Elasticsearch配置说明
+### 1.1.1 Elasticsearch 配置说明
 
 * elasticsearch.yml 关键配置
     * cluster.name 集群名称，以此判断是否属于同一集群
@@ -15,7 +15,7 @@
 * 参数修改的第二种方式
     * bin/elasticsearch -Ehttp.port=19200
 
-### 1.1.2 Elasticsearch本地集群启动
+### 1.1.2 Elasticsearch 本地集群启动
 
 ```shell
 # 依次执行以下三条命令
@@ -24,8 +24,8 @@ bin/elasticsearch -Ehttp.port=8200 -Epath.data=node2
 bin/elasticsearch -Ehttp.port=7200 -Epath.data=node3
 ```
 
-* 节点信息：http://localhost:9200/_cat/nodes?v
-* 集群信息：http://localhost:9200/_cluster/stats
+* 节点信息：`http://localhost:9200/_cat/nodes?v`
+* 集群信息：`http://localhost:9200/_cluster/stats`
 
 ### 1.1.3 常用术语
 
@@ -54,7 +54,7 @@ bin/elasticsearch -Ehttp.port=7200 -Epath.data=node3
 | 动作             | 请求                         |
 | ---------------- | ---------------------------- |
 | 创建索引         | PUT `/test_index`              |
-| 查看现有索引     | GET `_cat/indies`              |
+| 查看现有索引     | GET `_cat/indices`              |
 | 删除索引         | DELETE `/test_index`           |
 
 **文档api**
