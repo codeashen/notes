@@ -1,4 +1,4 @@
-# 1 Elasticsearch 入门
+# 一、Elasticsearch 入门
 
 ## 1.1 Elasticsearch 配置说明
 

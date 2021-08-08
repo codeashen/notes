@@ -1,4 +1,4 @@
-# 1 Search API 概览
+# 一、Search API 概览
 
 实现对 es 中存储的数据进行查询分析，endpoint 为 `_search`，如下所示：
 
@@ -11,7 +11,7 @@
 
 ![image-20201226180123424](https://s3.ax1x.com/2020/12/28/r7ajHO.png)
 
-# 2 URI Search
+# 二、URI Search
 
 ## 2.1 搜索方式介绍
 
@@ -113,7 +113,7 @@
 
 `"fox quick"~5`：以 term 为单位进行差异比较，比如 "quick fox"，"quick brown fox" 都会被匹配
 
-# 3 Request Body Search
+# 三、Request Body Search
 
 ## 3.1 搜索方式介绍
 
@@ -178,7 +178,7 @@ BM25 相比 TF/IDF 的一大优化是降低了 TF（词频）在过大时的权�
 
 至此，了解了相关性算分之后，开始详细介绍查询方式和语法。
 
-# 4 字段查询和复合查询
+# 四、字段查询和复合查询
 
 前面介绍 [Query DSL](#32-query-dsl) 时，提到 Query DSL 主要包含包含字段类型查询和符合查询。
 ## 4.1 字段查询
@@ -361,7 +361,7 @@ should 使用分两种情况：
 
 ![image-20201226204303800](https://s3.ax1x.com/2020/12/29/r7cC8O.png)
 
-# 5 Query 和 Filter 上下文
+# 五、Query 和 Filter 上下文
 
 默认情况下，Elasticsearch 按相关性分数对匹配的搜索结果进行排序，相关性分数衡量每个文档与查询的匹配程度。虽然每种查询类型可以不同地计算相关性分数，但分数计算还取决于查询子句是在查询还是过滤器上下文中运行。
 
@@ -377,7 +377,7 @@ Query 和 Filter 上下文使用示例：
 
 具体参考官方文档：[Query and filter context](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html)
 
-# 6 文档计数和字段过滤
+# 六、文档计数和字段过滤
 
 ## 6.1 文档计数
 

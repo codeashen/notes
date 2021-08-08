@@ -1,4 +1,4 @@
-# 1 Mapping
+# 一、Mapping
 
 ## 1.1 Mapping 介绍
 
@@ -102,7 +102,7 @@ text 类型默认配置为 positions，其他默认为 docs。记录内容越多
 
 ![image-20201225010451559](https://s3.ax1x.com/2020/12/25/rREzi8.png)
 
-### 2 动态映射 Dynamic Mapping
+# 二、动态映射 Dynamic Mapping
 
 ## 2.1 自动识别
 
@@ -140,7 +140,7 @@ es 是依靠 JSON 文档的字段类型来实现自动识别字段类型，支�
 
 ![image-20201225011838499](https://s3.ax1x.com/2020/12/25/rRVPMj.png)
 
-# 3 动态模板 Dynamic Template
+# 三、动态模板 Dynamic Template
 
 允许根据 es 自动识别的数据类型、字段名等来动态设定字段类型，可以实现如下效果：
 
@@ -169,7 +169,7 @@ es 是依靠 JSON 文档的字段类型来实现自动识别字段类型，支�
 2. 修改步骤1得到的 mapping，自定义相关配置
 3. 使用步骤2的 mapping 创建实际所需索引
 
-# 4 索引模板 Index Template
+# 四、索引模板 Index Template
 
 索引模板，英文为 Index Template，主要用于在新建索引时自动应用预先设定的配置，简化索引创建的操作步骤。创建规则如下：
 
