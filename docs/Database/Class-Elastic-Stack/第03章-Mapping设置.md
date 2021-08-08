@@ -1,4 +1,6 @@
-### 1.3.1 Mapping 介绍
+# 1 Mapping
+
+## 1.1 Mapping 介绍
 
 Mapping 类似数据库中的表结构定义，主要作用如下：
 
@@ -12,9 +14,9 @@ Mapping 类似数据库中的表结构定义，主要作用如下：
 
 ![image-20201224003751552](https://s3.ax1x.com/2020/12/24/rcJTNd.png)
 
-### 1.3.2 参数介绍
+## 1.2 参数介绍
 
-#### dynamic
+### 动态开关 dynamic
 
 * Mapping 中的字段类型一旦设定后，禁止直接修改，原因是 Lucene 实现的倒排索引生成后不允许修改
 
@@ -30,21 +32,21 @@ Mapping 类似数据库中的表结构定义，主要作用如下：
 
   查询一个索引的mapping： `GET /index_name/_mapping`
 
-#### copy_to
+### 字段复制 copy_to
 
 * 将该字段的值复制到目标字段，实现类似 `_all` 的作用
 * 不会出现在 `_source` 中，只用来搜索
 
 ![image-20201225003011925](https://s3.ax1x.com/2020/12/25/rREqsA.png)
 
-#### index
+### 是否索引 index
 
 * 控制当前字段是否索引，默认为 true，即记录索引，false 不记录，即不可搜索
 * 不用来检索的字段可以设置成 false，不生成倒排索引，会节省空间
 
 ![image-20201225003359686](https://s3.ax1x.com/2020/12/25/rRELqI.png)
 
-#### index_options
+### 索引内容控制 index_options
 
 index_options 用于控制倒排索引记录的内容，有如下4种配置
 
@@ -57,15 +59,15 @@ text 类型默认配置为 positions，其他默认为 docs。记录内容越多
 
 ![image-20201225004617196](https://s3.ax1x.com/2020/12/25/rREXZt.png)
 
-#### null_value
+### 默认空值 null_value
 
 当字段遇到 null 值时的处理策略，默认为 null，即空值，此时 es 会忽略该值。可以通过设定该值设定字段的默认值
 
 ![image-20201225004646636](https://s3.ax1x.com/2020/12/25/rREvIf.png)
 
-### 1.3.3 数据类型
+## 1.3 数据类型
 
-**常见数据类型**
+### 1.3.1 常见数据类型
 
 * 字符串：text，keyword
 * 数值型：long，integer，short，byte，double，float，half_float，scaled_float
@@ -74,18 +76,18 @@ text 类型默认配置为 positions，其他默认为 docs。记录内容越多
 * 二进制：binary
 * 范围类型：integer_range，float_range，long_range，double_range，date_range
 
-**复杂数据类型**
+### 1.3.2 复杂数据类型
 
 * 数组类型 array：无需指定为数组，只需要放入数组的元素符合该字段数据类型即可，即 integer 类型字段可以存放 integer 数组
 * 对象类型 object
 * 嵌套类型 nested object：和前者的区别的这些文档会特殊处理，不会和父文档混在一起，是独立存在的
 
-**地理位置数据类型**
+### 1.3.3 地理位置数据类型
 
 * geo_point
 * geo_shape
 
-**专用类型**
+### 1.3.4 专用类型
 
 * ip：记录ip地址
 * completion：实现自动补全
@@ -94,15 +96,15 @@ text 类型默认配置为 positions，其他默认为 docs。记录内容越多
 * percolator
 * join：做子查询用
 
-**多字段特性 multi-fields**
+### 1.3.4 多字段特性 multi-fields
 
 允许对同一个字段采用不同的配置，比如分词，常见例子如对人名实现拼音搜索，只需要在人名中新增一个子字段为 pinyin 即可
 
 ![image-20201225010451559](https://s3.ax1x.com/2020/12/25/rREzi8.png)
 
-### 1.3.4 Dynamic Mapping
+### 2 动态映射 Dynamic Mapping
 
-#### 自动识别
+## 2.1 自动识别
 
 es 可以自动识别文档字段类型，从而降低用户使用成本，如下所示
 
@@ -112,9 +114,9 @@ es 是依靠 JSON 文档的字段类型来实现自动识别字段类型，支�
 
 ![image-20201225010926671](https://s3.ax1x.com/2020/12/25/rRVpRg.png)
 
-#### 日期和数字识别
+## 2.2 日期和数字识别
 
-**日期识别**
+### 2.2.1 日期识别
 
 日期的自动识别可以自行配置日期格式，以满足各种需求
 
@@ -130,7 +132,7 @@ es 是依靠 JSON 文档的字段类型来实现自动识别字段类型，支�
 
 ![image-20201225011645649](https://s3.ax1x.com/2020/12/25/rRV9zQ.png)
 
-**数字识别**
+### 2.2.2 数字识别
 
 字符串是数字时，默认不会自动识别为整型，因为字符串中出现数字是完全合理的
 
@@ -138,7 +140,7 @@ es 是依靠 JSON 文档的字段类型来实现自动识别字段类型，支�
 
 ![image-20201225011838499](https://s3.ax1x.com/2020/12/25/rRVPMj.png)
 
-### 1.3.5 Dynamic Template
+# 3 动态模板 Dynamic Template
 
 允许根据 es 自动识别的数据类型、字段名等来动态设定字段类型，可以实现如下效果：
 
@@ -167,7 +169,7 @@ es 是依靠 JSON 文档的字段类型来实现自动识别字段类型，支�
 2. 修改步骤1得到的 mapping，自定义相关配置
 3. 使用步骤2的 mapping 创建实际所需索引
 
-### 1.3.6 索引模板
+# 4 索引模板 Index Template
 
 索引模板，英文为 Index Template，主要用于在新建索引时自动应用预先设定的配置，简化索引创建的操作步骤。创建规则如下：
 

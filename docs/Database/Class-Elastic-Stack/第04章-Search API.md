@@ -1,4 +1,4 @@
-### 1.4.1 Search API 概览
+# 1 Search API 概览
 
 实现对 es 中存储的数据进行查询分析，endpoint 为 `_search`，如下所示：
 
@@ -11,7 +11,9 @@
 
 ![image-20201226180123424](https://s3.ax1x.com/2020/12/28/r7ajHO.png)
 
-### 1.4.2 URI Search
+# 2 URI Search
+
+## 2.1 搜索方式介绍
 
 通过 url query 参数来实现搜索，常用参数如下：
 
@@ -23,9 +25,9 @@
 
 ![image-20201226180557610](https://s3.ax1x.com/2020/12/28/r7azUe.png)
 
-#### Query String Syntax
+## 2.2 搜索语法
 
-**匹配规则**
+### 匹配规则
 
 * term 与 phrase：
 
@@ -51,7 +53,7 @@
 
 ![image-20201226183215912](https://s3.ax1x.com/2020/12/28/r7dC8A.png)
 
-**布尔操作符**
+### 布尔操作符
 
 * AND(&&), OR(|), NOT(!)
 
@@ -67,7 +69,7 @@
 
   > `+` 在 url 中会被解析为空格，要使用 encode 后的结果才可以，为 `%2B`
 
-**范围查询，支持数值和日期**
+### 范围查询，支持数值和日期
 
 * 区间写法，闭区间用 `[]`，开区间用 `{}`
 
@@ -85,7 +87,7 @@
   age:(>=1&&<=10) 或者 age:(+>=1+<=10)
   ```
 
-**通配符查询**
+### 通配符查询
 
 * `?` 代表1个字符，`*` 代表0或多个字符
 
@@ -99,68 +101,47 @@
 
 * 如无特殊需求，不要将 `?` 或 `*` 放在最前面
 
-**正则表达式匹配**
+### 正则表达式匹配
 
 `name:/[mb]oat/`
 
-**模糊匹配 fuzzy query**
+### 模糊匹配 fuzzy query
 
 `name:roam~1`：匹配与 roam 差 1 个 character 的词，比如 foam、roams 等
 
-**近似度查询 proximity search**
+### 近似度查询 proximity search
 
 `"fox quick"~5`：以 term 为单位进行差异比较，比如 "quick fox"，"quick brown fox" 都会被匹配
 
-### 1.4.3 Request Body Search
+# 3 Request Body Search
+
+## 3.1 搜索方式介绍
 
 将查询语句通过 http request body 发送到 es，主要包含如下参数
 
 * query：符合 Query DSL 语法的查询语句
 * from、size、timeout、sort 等等
 
-#### Query DSL
+## 3.2 Query DSL
 
 基于JSON定义的查询语言，主要包含如下两种类型：
 
-* **字段类查询**：如 term,match,range 等，只针对某一个字段进行查询
+* **字段类查询**：如 term, match, range 等，只针对某一个字段进行查询
 * **复合查询**：如 bool 查询等，包含一个或多个字段类查询或者复合查询语句
 
-### 1.4.4 字段类型查询
+具体参考官方文档：[Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
 
-字段类查询主要包括以下两类：
+后面会详细介绍相关查询的含义和语法
 
-* **全文匹配**：针对 text 类型的字段进行全文检索，会对查询语句先进行分词处理，如 match，match_phrase 等 query 类型
-* **单词匹配**：不会对查询语句做分词处理，直接去匹配字段的倒排索引，如 term，terms，range 等 query 类型
+## 3.3 相关性算分
 
-#### Match Query
-
-* **对字段作全文检索**，最基本和常用的查询类型，API示例如下
-
-![image-20201226192654312](https://s3.ax1x.com/2020/12/28/r7divt.png)
-
-![image-20201226192834774](https://s3.ax1x.com/2020/12/28/r7dkKP.png)
-
-* Match Query具体流程如下
-
-![image-20201226193018447](https://s3.ax1x.com/2020/12/28/r7dEb8.png)
-
-* 通过 **operator** 参数可以控制单词间的匹配关系，可选项为 `or` 和 `and`
-
-  > 以下示例表示 文档中 alfred 和 way 必须同时存在
-
-![image-20201226193147450](https://s3.ax1x.com/2020/12/28/r7deUg.png)
-
-* 通过 **minimum_should_match** 参数可以控制需要匹配的单词数
-
-  > 以下示例表示 文档最少含有条件中的两个单词
-
-![image-20201226193340270](https://s3.ax1x.com/2020/12/28/r7dM2n.png)
-
-#### 相关性算分
+在介绍详细介绍查询方式之前，先学习下 es 的相关性算分。
 
 相关性算分是指文档与查询语句间的相关度，英文为 relevance，通过倒排索引可以获取与查询语句相匹配的文档列表，那么如何 **将最符合用户查询需求的文档放到前列** 呢？本质是一个排序问题，排序的依据是相关性算分。
 
 ![image-20201226193837601](https://s3.ax1x.com/2020/12/28/r7dQvq.png)
+
+### 3.3.1 相关性算分因素
 
 相关性算分的几个重要概念如下：
 
@@ -168,6 +149,8 @@
 * **Document Frequency(DF)** 文档频率，即单词出现的文档数
 * **Inverse Document Frequency(IDF)** 逆向文档频率，与文档频率相反，简单理解为1/DF。即单词出现的文档数越少，相关度越高
 * **Field-length Norm** 文档越短，相关性越高
+
+### 3.3.2 相关性算分模型
 
 ES目前主要有两个相关性算分模型，如下：
 
@@ -192,6 +175,50 @@ ES目前主要有两个相关性算分模型，如下：
 BM25 相比 TF/IDF 的一大优化是降低了 TF（词频）在过大时的权重
 
 ![image-20201226200925270](https://s3.ax1x.com/2020/12/28/r7dJVU.png)
+
+至此，了解了相关性算分之后，开始详细介绍查询方式和语法。
+
+# 4 字段查询和复合查询
+
+前面介绍 [Query DSL](#32-query-dsl) 时，提到 Query DSL 主要包含包含字段类型查询和符合查询。
+## 4.1 字段查询
+
+字段类查询主要包括以下两类：
+
+* **全文查询**：针对 text 类型的字段进行全文检索，会对查询语句先进行分词处理，如 match，match_phrase 等 query 类型。
+* **单词级查询**：不会对查询语句做分词处理，直接去匹配字段的倒排索引，如 term，terms，range 等。
+
+### 4.1.1 全文查询
+
+全文查询使你能够搜索分析过的文本字段，例如电子邮件正文。查询时使用的分词器和索引时分词器相同。
+
+具体可参考官方文档：[Full text queries](https://www.elastic.co/guide/en/elasticsearch/reference/current/full-text-queries.html)
+
+全文查询包含以下具体方式：
+
+#### Match Query
+
+* **对字段作全文检索**，最基本和常用的查询类型，API示例如下
+
+![image-20201226192654312](https://s3.ax1x.com/2020/12/28/r7divt.png)
+
+![image-20201226192834774](https://s3.ax1x.com/2020/12/28/r7dkKP.png)
+
+* Match Query具体流程如下
+
+![image-20201226193018447](https://s3.ax1x.com/2020/12/28/r7dEb8.png)
+
+* 通过 **operator** 参数可以控制单词间的匹配关系，可选项为 `or` 和 `and`
+
+  > 以下示例表示 文档中 alfred 和 way 必须同时存在
+
+![image-20201226193147450](https://s3.ax1x.com/2020/12/28/r7deUg.png)
+
+* 通过 **minimum_should_match** 参数可以控制需要匹配的单词数
+
+  > 以下示例表示 文档最少含有条件中的两个单词
+
+![image-20201226193340270](https://s3.ax1x.com/2020/12/28/r7dM2n.png)
 
 #### Match Phrase Query
 
@@ -229,6 +256,14 @@ BM25 相比 TF/IDF 的一大优化是降低了 TF（词频）在过大时的权�
 
 ![image-20201226201923225](https://s3.ax1x.com/2020/12/28/r7dyVO.png)
 
+### 4.1.2 单词级查询
+
+使用单词级别的查询，根据结构化数据中的精确值查找文档。与全文查询不同，词级查询不进行分词。相反，单词级查询与文档中的字段进行精确匹配。
+
+具体可参考官方文档：[Term level queries](https://www.elastic.co/guide/en/elasticsearch/reference/current/term-level-queries.html)
+
+单词级查询包含以下具体方式：
+
 #### Term Query
 
 将查询语句作为整个单词进行查询，即不对查询语句做分词处理，如下所示：
@@ -259,25 +294,29 @@ BM25 相比 TF/IDF 的一大优化是降低了 TF（词频）在过大时的权�
 
 ![image-20201226202813590](https://s3.ax1x.com/2020/12/28/r7d4Mt.png)
 
-### 1.4.5 复合查询
+## 4.2 复合查询
 
 复合查询是指包含字段类查询或复合查询的类型，主要包括以下几类：
 
-* **constant_score query**
-* **bool query**
-* dis_max query
-* function_score query
-* boosting query
+* **constant_score query**：包装另一个查询的查询，但在过滤器上下文中执行它。
+* **bool query**：组合一个或多个布尔查询子句。
+* dis_max query：接受多个查询并返回与任何查询子句匹配的文档。
+* function_score query：允许修改查询结果文档的相关性得分。
+* boosting query：返回匹配 positive 子句的文档，同时减少也匹配 negative 子句文档的分数。
 
-#### constant_score query
+具体参考官方文档：[Compound Queries](https://www.elastic.co/guide/en/elasticsearch/reference/current/compound-queries.html)
 
-该查询将其内部的查询结果文档得分都设定为 1 或者 boost 的值，多用于结合 bool 查询实现自定义得分
+下面重点介绍 `constant_score query` 和 `bool query`
+
+### 4.2.1 constant_score query
+
+包装过滤器查询，并将所有结果的相关性得分都设置成 `boost` 参数设置的值，默认为 1.0，然后将过滤后的文档放回。
 
 ![image-20201226203228938](https://s3.ax1x.com/2020/12/29/r76o5V.png)
 
-#### bool query
+### bool query
 
-布尔查询由一个或多个布尔子句组成，主要包含如下4个：
+布尔查询，由一个或多个布尔子句组成，主要包含如下4个：
 
 | 子句     | 含义                                                     |
 | -------- | -------------------------------------------------------- |
@@ -322,23 +361,31 @@ should 使用分两种情况：
 
 ![image-20201226204303800](https://s3.ax1x.com/2020/12/29/r7cC8O.png)
 
-#### Query Context VS Filter Context
+# 5 Query 和 Filter 上下文
 
-当一个查询语句位于 Query 或者 Filter 上下文时，es 执行的结果会不同，对比如下：
+默认情况下，Elasticsearch 按相关性分数对匹配的搜索结果进行排序，相关性分数衡量每个文档与查询的匹配程度。虽然每种查询类型可以不同地计算相关性分数，但分数计算还取决于查询子句是在查询还是过滤器上下文中运行。
+
+在 Query 上下文中，查询子句回答了 `“此文档与此查询子句匹配程度如何？”` 除了判断文档是否匹配外，查询子句还会计算 `_score` 元数据字段中的相关性分数 。
+
+在 Filter 上下文中，查询子句回答问题 `“此文档是否与此查询子句匹配？”`，答案是简单的“是”或“否”——不计算分数。过滤上下文主要用于过滤查询结果文档。
 
 ![image-20201226204502324](https://s3.ax1x.com/2020/12/29/r7c9PK.png)
 
+Query 和 Filter 上下文使用示例：
+
 ![image-20201226204553616](https://s3.ax1x.com/2020/12/29/r7cS56.png)
 
-### 1.4.6 计数和字段过滤
+具体参考官方文档：[Query and filter context](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html)
 
-#### Count API
+# 6 文档计数和字段过滤
+
+## 6.1 文档计数
 
 获取符合条件的文档数，endpoint 为 `_count`
 
 ![image-20201226204633445](https://s3.ax1x.com/2020/12/29/r7cixe.png)
 
-#### Source Filtering
+## 6.2 文档字段过滤
 
 过滤返回结果中 `_source` 中的字段，主要有如下几种方式：
 
