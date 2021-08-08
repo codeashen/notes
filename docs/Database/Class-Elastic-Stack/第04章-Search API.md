@@ -131,7 +131,9 @@
 
 具体参考官方文档：[Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
 
-后面会详细介绍相关查询的含义和语法
+Query DSL 结构包含主要包含下图部分，后面会详细介绍相关查询的含义和语法。
+
+![image-20210809022421414](https://z3.ax1x.com/2021/08/09/f10xJI.png)
 
 ## 3.3 相关性算分
 
@@ -314,7 +316,7 @@ BM25 相比 TF/IDF 的一大优化是降低了 TF（词频）在过大时的权�
 
 ![image-20201226203228938](https://s3.ax1x.com/2020/12/29/r76o5V.png)
 
-### bool query
+### 4.2.2 bool query
 
 布尔查询，由一个或多个布尔子句组成，主要包含如下4个：
 
