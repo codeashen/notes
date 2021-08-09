@@ -1,55 +1,63 @@
-## 2.1 Docker的架构和底层技术
+# 一、Docker 的架构和底层技术
 
-Docker Platform
+## 1.1 Docker 平台
 
-* Docker提供了一个开发，打包，运行app的平台
-* 把app和底层infrastructure隔离开来
+* Docker 提供了一个开发，打包，运行 app 的平台
+* 把 app 和底层 infrastructure 隔离开来
 
 ![image-20210107113657044](https://s3.ax1x.com/2021/01/07/se1PpQ.png)
 
-Docker Engine
+## 1.2 Docker Engine
 
-* 后台进程（dockerd)
-* REST API Server
-* CLI接口（docker)
+* Docker Engine 有一个后台进程（dockerd）
+* 提供 REST API Server
+* 提供 CLI接口（docker）
 
 ![image-20210107113729851](https://s3.ax1x.com/2021/01/07/se1ilj.png)
 
-Docker Architecture
+## 1.3 Docker 架构
 
 ![image-20210107114039372](https://s3.ax1x.com/2021/01/07/se1F6s.png)
 
-底层技术支持
+## 1.4 底层技术支持
 
-* Namespaces：做隔离pid,net,ipc,mnt,uts
+* Namespaces：做隔离 pid, net, ipc, mnt, uts
 * Control groups：做资源限制
-* Union file systems：Container和image的分层
+* Union file systems：Container 和 image 的分层
 
-## 2.2 Docker Image
+# 二、Docker Image
 
-* 文件和meta data的集合（root filesystem)
-* 分层的，并且每一层都可以添加改变删除文件，成为一个新的image
-* 不同的image可以共享相同的layer
-* Image本身是read-only的
+## 2.1 镜像概述
+
+* 文件和 meta data 的集合（root filesystem）
+* 分层的，并且每一层都可以添加改变删除文件，成为一个新的 image
+* 不同的 image 可以共享相同的 layer
+* Image 本身是 read-only 的
 
 ![image-20210107131324326](https://s3.ax1x.com/2021/01/07/se1kXn.png)
 
-如何获得一个image
+## 2.2 镜像获取
 
-方式一、build from dockerfile
+有两种方式获取镜像，`build` 构建镜像和 `pull` 拉取镜像。
+
+### 2.2.1 构建镜像
+
+通过 dockerfile 构建镜像
 
 ![image-20210107131747649](https://s3.ax1x.com/2021/01/07/se1V00.png)
 
-方式二、pull fom register
+### 2.2.2 拉取镜像
+
+从 register 中心拉取镜像
 
 ![image-20210107132300348](https://s3.ax1x.com/2021/01/07/se1hcj.png)
 
-## 2.3 Docker Container
+# 三、Docker Container
 
-* 通过Image创建（copy）
-* 在lmage layer之上建立一个container layer（可读写）
+* 通过 Image 创建（copy）
+* 在 Image layer 之上建立一个 container layer（可读写）
 * 类比面向对象：类和实例
-* Image负责app的存储和分发，Container负责运行app
+* Image 负责 app 的存储和分发，Container 负责运行 app
 
 ![image-20210107133335105](https://s3.ax1x.com/2021/01/07/se8kd0.png)
 
@@ -65,119 +73,119 @@ Docker Architecture
   #删除所有容器
   docker rm $(docker ps -aq)
   ```
-## 2.4 Dockerfile语法梳理及最佳实践
+# 四、Dockerfile语法及最佳实践
 
-### FROM
+## 4.1 语法介绍
 
-用于指定base镜像
+### 4.1.1 FROM 基础镜像
+
+用于指定 base 镜像
 
 ![image-20210107151927292](https://s3.ax1x.com/2021/01/07/sefi8S.png)
 
-> 尽量使用官方的image作为base image！
+> 尽量使用官方的 image 作为 base image
 
-### LABEL
+### 4.1.2 LABEL 元数据
 
 用于添加元数据
 
 ![image-20210107151908380](https://s3.ax1x.com/2021/01/07/sefFgg.png)
 
-> Metadata不可少
+> Metadata 不可少
 
-### RUN
+### 4.1.3 RUN 运行命令
 
-使用RUN运行一些命令，安装一些软件的时候经常使用run。
+使用 RUN 运行一些命令，安装一些软件的时候经常使用 run。
 
-每执行一次RUN，image都会新加一层。
+每执行一次 RUN，image 都会新加一层。
 
 ![image-20210107151851460](https://s3.ax1x.com/2021/01/07/sefEuj.png)
 
-> * 为了美观，复杂的RUN请用反斜线换行！
+> * 为了美观，复杂的 RUN 请用反斜线换行！
 > * 避免无用分层，合并多条命令成一行！
 
-### WORKDIR
+### 4.1.4 WORKDIR 工作目录
 
 用于指定工作目录
 
 ![image-20210107151821768](https://s3.ax1x.com/2021/01/07/sefnU0.png)
 
-> * 用WORKDIR，不要用RUN cd！
-> * 尽量使用绝对目录！
+> * 用 WORKDIR，不要用 RUN cd
+> * 尽量使用绝对目录
 
-### ADD、COPY
+### 4.1.5 ADD、COPY 添加文件
 
-将本地文件添加到docker image里。
+将本地文件添加到 docker image 里。
 
-ADD添加到docker image目录中可以自动将文件解压缩
+ADD 添加到 docker image 目录中可以自动将文件解压缩
 
 ![image-20210107152243522](https://s3.ax1x.com/2021/01/07/sehH6e.png)
 
-> * 大部分情况，COPY优于ADD！
-> *  ADD除了COPY还有额外功能（解压）！
-> * 添加远程文件/目录请使用curl或者wget！
+> * 大部分情况，COPY 优于 ADD
+> * ADD 除了 COPY 还有额外功能（解压）
+> * 添加远程文件/目录请使用 curl 或者 wget
 
-### ENV
+### 4.1.6 ENV 环境变量
 
 添加环境变量
 
 ![image-20210107152856953](https://s3.ax1x.com/2021/01/07/se4ehV.png)
 
-> 尽量使用ENV增加可维护性
+> 尽量使用 ENV 增加可维护性
 
-### VOLUME、EXPOSE
+### 4.1.7 VOLUME、EXPOSE 存储和网络
 
 用于存储和网络
 
-### CMD、ENTRYPOINT
+### 4.1.8 CMD 默认命令
 
-## 2.5 RUN、CMD、ENTRYPOINT
-
-* **RUN**：执行命令并创建新的Image Layer
-* **CMD**：设置容器启动后默认执行的命令和参数
-* **ENTRYPOINT**：设置容器启动时运行的命令
-
-### Shell和Exec格式
-
-Dockerfile中可以使用shell格式或者Exec格式编写命令，Shell格式用shell脚本语法编写，Exec格式使用命令和参数的特定格式编写。
-
-**Shell格式：**
-
-![image-20210112004118859](https://s3.ax1x.com/2021/01/12/sGaQtP.png)
-
-**Exec格式：**
-
-![image-20210112004130931](https://s3.ax1x.com/2021/01/12/sGa3p8.png)
-
-### CMD
-
-* 容器启动时默认执行的命令
-* 如果docker run指定了其它命令，CMD命令被忽略
-* 如果定义了多个CMD，只有最后一个会执行
+* 容器启动后默认执行的命令
+* 如果 docker run 指定了其它命令，CMD 命令被忽略
+* 如果定义了多个 CMD，只有最后一个会执行
 
 ![image-20210112005020350](https://s3.ax1x.com/2021/01/12/sGatmj.png)
 
-### ENTRYPOINT
+### 4.1.9 ENTRYPOINT 启动命令
 
 * 让容器以应用程序或者服务的形式运行
 * 不会被忽略，一定会执行
-* 最佳实践：写一个shell脚本作为entrypoint
+* 最佳实践：写一个 shell 脚本作为 entrypoint
+
+## 4.2 RUN、CMD、ENTRYPOINT 对比
+
+* **RUN**：执行命令并创建新的 Image Layer
+* **CMD**：设置容器启动后默认执行的命令和参数
+* **ENTRYPOINT**：设置容器启动后运行的命令
+
+## 4.3 命令编写格式
+
+Dockerfile 中可以使用 shell 格式或者 Exec 格式编写命令，Shell 格式用 shell 脚本语法编写，Exec 格式使用命令和参数的特定格式编写。
+
+### 4.3.1 Shell 格式
+
+![image-20210112004118859](https://s3.ax1x.com/2021/01/12/sGaQtP.png)
+
+### 4.3.2 Exec 格式
+
+![image-20210112004130931](https://s3.ax1x.com/2021/01/12/sGa3p8.png)
 
 ```dockerfile
-# 参考mongodb的写法
+# 参考 mongodb 的写法
 
-# 拷贝本地的shell脚本文件到镜像的中
+# 拷贝本地的 shell 脚本文件到镜像的中
 COPY docker-entrypoint.sh /usr/1ocal/bin/ 
-# 使用ENTRYPOINT命令运行shell脚本
+# 使用 ENTRYPOINT 命令运行 shell 脚本
 ENTRYPOINT ["docker-entrypoint.sh"] 
 
 EXPOSE 27017 
 CMD ["mongod"]
 ```
 
-## 2.6 发布镜像
+# 五、发布镜像
 
-1. docker hub注册账户
+1. docker hub 注册账户
 
-2. 本地登录docker账户
+2. 本地登录 docker 账户
 
    ```shell
    $ docker login
@@ -186,10 +194,10 @@ CMD ["mongod"]
    Login Succeeded
    ```
 
-3. 编写dockerfile，构建docker image
+3. 编写 dockerfile，构建 docker image
 
    ```shell
-   # 构建自己的镜像，注意镜像名要以“docker用户名/”开头
+   # 构建自己的镜像，注意镜像名要以 “docker用户名/” 开头
    $ docker build -t lucifer/mycentos .
    ```
 
@@ -199,8 +207,4 @@ CMD ["mongod"]
    $ docker push lucifer/mycentos:latest
    ```
 
----
-
-创建私有的docker镜像仓库：
-
-https://registry.hub.docker.com/_/registry
+创建私有的 docker 镜像仓库参考：https://registry.hub.docker.com/_/registry
