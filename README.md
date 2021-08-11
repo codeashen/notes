@@ -13,7 +13,8 @@
 - [ElasticStack从入门到实践](docs/Database/Class-Elastic-Stack/第01章-Elasticsearch入门.md) [`课程`](https://coding.imooc.com/class/181.html)
 - [一站式学习Redis从入门到高可用分布式实践](docs/Database/Class-Redis从入门到高可用/第01章-初识Redis.md) [`课程`](https://coding.imooc.com/class/151.html) 
 - [高性能可扩展MySQL数据库架构设计与优化](docs/Database/Class-高性能可扩展MySQL/第01章-.md)   [`课程`](https://coding.imooc.com/class/79.html)
-- [MySQL面试指南](docs/Database/Class-MySQL面试指南/第01章-.md)  [`课程`](https://coding.imooc.com/class/chapter/296.html)
+- [MySQL8.0详解与实战](docs/Database/Class-MySQL8.0详解与实战/第01章-数据库选型.md)  [`课程`](https://coding.imooc.com/class/chapter/296.html)
+- [MySQL面试指南](docs/Database/Class-MySQL面试指南/第01章-MySQL版本.md)  [`课程`](https://coding.imooc.com/class/chapter/296.html)
 
 ### 中间件
 
@@ -29,6 +30,7 @@
 ### DevOps
 
 - [系统学习Docker践行DevOps理念](docs/DevOps/Class-Docker/第01章-容器技术和Docker简介.md)  [`课程`](https://coding.imooc.com/class/189.html)
+- [自动化部署三剑客](docs/DevOps/Class-自动化部署三剑客/第01章-Gitlab.md)  [`课程`](https://coding.imooc.com/class/253.html)
 
 ### 计算机基础
 
