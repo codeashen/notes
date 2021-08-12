@@ -14,7 +14,7 @@
 
 慢查询日志默认是关闭的，通过以下配置开启慢查询日志。
 
-```mysql
+```sql
 set global slow_query_log = [ON|OFF] 
 set global slow_query_log_file = /sql_log/slowlog.log 
 set global long_query_time = xx.xxx 秒 
@@ -38,7 +38,7 @@ set global log_queries_not_using_indexes = [ON|OFF]
 - 了解 SQL 如何使用表中的索引
 - 了解 SQL 所使用的查询类型
 
-```mysql
+```sql
 EXPLAIN SELECT course_id, title, study_cnt FROM imc_course WHERE study_cnt > 3000;
 ```
 
@@ -53,7 +53,7 @@ EXPLAIN SELECT course_id, title, study_cnt FROM imc_course WHERE study_cnt > 300
 
 示例一：id 相同的情况
 
-```mysql
+```sql
 EXPLAIN SELECT course_id, class_name, level_name, title, study_cnt 
 FROM imc_course a 
 JOIN imc_class b ON b.class_id = a.class_id 
@@ -65,7 +65,7 @@ WHERE study_cnt > 3000；
 
 示例二：id 不同的情况
 
-```mysql
+```sql
 EXPLAIN SELECT a.course_id, a.title
 FROM imc_course a 
 WHERE a.course_id NOT IN (
@@ -90,7 +90,7 @@ WHERE a.course_id NOT IN (
 | union result       | union 产生的结果集                                           |
 | derived            | 出现在 from 子句中的子查询                                   |
 
-```mysql
+```sql
 EXPLAIN 
 SELECT course_id, class_name, level_name, title, study_cnt 
 FROM imc_course a 
