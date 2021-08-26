@@ -1,6 +1,6 @@
-# 一、Redis特性
+# 一、Redis 特性
 
-Redis是一个开源的基于键值的存储服务系统，支持多种数据结构，性能非常高，功能丰富。
+Redis 是一个开源的基于键值的存储服务系统，支持多种数据结构，性能非常高，功能丰富。
 
 - 速度快
 - 持久化
@@ -15,7 +15,7 @@ Redis是一个开源的基于键值的存储服务系统，支持多种数据结
 官方称可达到 10W QPS
 
 - 存储介质：内存
-- 实现语言：C语言
+- 实现语言：C 语言
 - 线程模型：单线程（内存读写速度非常快，使用单线程就能达到很高的性能，避免多线程造成的性能瓶颈）
 
 ![image-20210527175348363](https://z3.ax1x.com/2021/05/27/2Pvdde.png)
@@ -24,7 +24,7 @@ Redis是一个开源的基于键值的存储服务系统，支持多种数据结
 
 **特性二：持久化**
 
-Redis所有数据保持在内存中，对数据的更新将异步地保存到磁盘上。
+Redis 所有数据保持在内存中，对数据的更新将异步地保存到磁盘上。
 
 **特性三：多种数据结构**
 
@@ -43,13 +43,13 @@ Redis所有数据保持在内存中，对数据的更新将异步地保存到磁
 **特性五：功能丰富**
 
 - 发布订阅
-- Lua脚本
+- Lua 脚本
 - 事务
 - Pipeline
 
 **特性六：简单**
 
-- 单机核心代码只有23000行
+- 单机核心代码只有 23000 行
 - 不依赖于外部库
 - 单线程模型
 
@@ -59,30 +59,30 @@ Redis所有数据保持在内存中，对数据的更新将异步地保存到磁
 
 **特性八：高可用、分布式**
 
-- 高可用：Redis-Sentinel（v2.4之后）
-- 分布式：Redis-Cluster（v3.0之后）
+- 高可用：Redis-Sentinel（v2.4 之后）
+- 分布式：Redis-Cluster（v3.0 之后）
 
-# 二、Redis典型适用场景
+# 二、Redis 典型适用场景
 
 1. 缓存系统
 
   ![image-20210527184124224](https://z3.ax1x.com/2021/05/27/2iC7l9.png)
 
-2. 计数器：适用Redis提供的incr、decr，可以在单线程下高效计数
+2. 计数器：适用 Redis 提供的 incr、decr，可以在单线程下高效计数
 
   ![image-20210527184312463](https://z3.ax1x.com/2021/05/27/2iCzfe.png)
 
-3. 消息队列系统：Redis提供发布订阅功能，可以用于一些简单的消息队列功能
+3. 消息队列系统：Redis 提供发布订阅功能，可以用于一些简单的消息队列功能
 
-4. 排行榜：适用Redis的有序集合实现
+4. 排行榜：适用 Redis 的有序集合实现
 
-5. 社交网络：Redis跟社交网络很多功能吻合，如粉丝数、关注数、共同关注、时间轴列表等
+5. 社交网络：Redis 跟社交网络很多功能吻合，如粉丝数、关注数、共同关注、时间轴列表等
 
 6. 实时系统：布隆过滤器等
 
-# 三、Redis安装和启动
+# 三、Redis 安装和启动
 
-## 3.1 Redis安装
+## 3.1 Redis 安装
 
 ```shell
 # 下载安装
@@ -98,19 +98,19 @@ Redis所有数据保持在内存中，对数据的更新将异步地保存到磁
 
 可执行文件说明
 
-- redis-server：Redis服务器
-- redis-cli：Redis命令行客户端
-- redis-batchmark：Redis性能测试工具
-- redis-check-aof：AOF文件修复工具
-- redis-check-dump：RDB文件修复工具
-- redis-sentinel：Sentinel服务器
+- `redis-server`：Redis 服务器
+- `redis-cli`：Redis 命令行客户端
+- `redis-batchmark`：Redis 性能测试工具
+- `redis-check-aof`：AOF 文件修复工具
+- `redis-check-dump`：RDB 文件修复工具
+- `redis-sentinel`：Sentinel 服务器
 
-## 3.2 Redis三种启动方式
+## 3.2 Redis 三种启动方式
 
 **方式一：默认方式启动**
 
 ```shell
-# 启动redis
+# 启动 redis
 > redis-server
 
 # 验证
@@ -139,16 +139,16 @@ Redis所有数据保持在内存中，对数据的更新将异步地保存到磁
 - 生成环境选择配置文件启动
 - 单机多实例配置文件可以用端口区分开
 
-Redis客户端连接：
+Redis 客户端连接：
 
 ```shell
 redis-cli -h ip -p port
 ```
 
-## 3.3 Redis常用配置
+## 3.3 Redis 常用配置
 
-- daemonize：是否以守护进程启动（no|yes）（默认no，建议yes）
-- port：Redis对外端口号
-- logfile：Redis系统日志
-- dir：Redis工作目录
+- `daemonize`：是否以守护进程启动（no|yes）（默认 no，建议 yes）
+- `port`：Redis 对外端口号
+- `logfile`：Redis 系统日志
+- `dir`：Redis 工作目录
 

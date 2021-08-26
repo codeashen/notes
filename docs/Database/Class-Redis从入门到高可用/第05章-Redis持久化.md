@@ -1,6 +1,6 @@
 # 一、持久化的作用
 
-redis所有数据保持在内存中，对数据的更新将异步地保存到磁盘上。
+redis 所有数据保持在内存中，对数据的更新将异步地保存到磁盘上。
 
 主流数据库的持久化方式：
 
@@ -9,55 +9,55 @@ redis所有数据保持在内存中，对数据的更新将异步地保存到磁
 | 快照       | 数据库某时刻的完整备份                                       | MySQL Dump<br>Redis RDB                 |
 | 写日志     | 将数据库的变化操作记录在日志中，可以重放日志中的操作恢复数据 | MySQL Binlog<br>Hbase HLog<br>Redis AOF |
 
-Redis持久化有RDB和AOF两种策略
+Redis 持久化有 RDB 和 AOF 两种策略
 
 # 二、RDB
 
-## 2.1 RDB介绍
+## 2.1 RDB 介绍
 
 ![image-20210603174625696](https://z3.ax1x.com/2021/06/03/23al1f.png)
 
-- Redis在某一时刻记录此时内存中完整数据的一个快照，保存在RDB文件中
-- 在启动重新载入RDB文件，就可以恢复数据到内存中
-- RDB文件也是主从复制的一个媒介
+- Redis 在某一时刻记录此时内存中完整数据的一个快照，保存在 RDB 文件中
+- 在启动重新载入 RDB 文件，就可以恢复数据到内存中
+- RDB 文件也是主从复制的一个媒介
 
-## 2.2 RDB触发的三种方式 
+## 2.2 RDB 触发的三种方式 
 
 ### save（同步）
 
-redis客户端发送save命令，服务端就会执行rdb操作。
+redis 客户端发送 `save` 命令，服务端就会执行 rdb 操作。
 
 ![image-20210603180124647](https://z3.ax1x.com/2021/06/03/23BMVg.png)
 
-save命令是一个同步命令，会等带服务端操作完成返回，在此之前服务端不能响应客户端的其他命令。
+`save` 命令是一个同步命令，会等带服务端操作完成返回，在此之前服务端不能响应客户端的其他命令。
 
 ![image-20210603180525847](https://z3.ax1x.com/2021/06/03/23DPyV.png)
 
-save命令的文件策略：如果有老的rdb文件，save命令会生成一个临时rdb文件（此时有两个rdb文件），然后覆盖掉老的rdb文件。
+`save` 命令的文件策略：如果有老的 rdb 文件，`save` 命令会生成一个临时 rdb 文件（此时有两个 rdb 文件），然后覆盖掉老的 rdb 文件。
 
 时间复杂度：O(n)
 
 ### bgsave（异步）
 
-redis客户端发送bgsave命令，服务端收到命令后直接返回"Background saving started"。然后在redis服务端中，会fork出一个子进程，在子进程中至今rdb操作，操作完成后告知主进程成功。
+redis 客户端发送 `bgsave` 命令，服务端收到命令后直接返回 "Background saving started"。然后在 redis 服务端中，会 fork 出一个子进程，在子进程中执行 rdb 操作，操作完成后告知主进程成功。
 
-bgsave是异步的，所以执行bgsave操作时服务端可以正常响应客户端的其他命令。bgsave的文件策略和时间复杂度同save。
+`bgsave` 是异步的，所以执行 `bgsave` 操作时服务端可以正常响应客户端的其他命令。`bgsave` 的文件策略和时间复杂度同 `save`。
 
 ![image-20210603180735447](https://z3.ax1x.com/2021/06/03/23DYYd.png)
 
-save和bgsave对比：
+`save` 和 `bgsave` 对比：
 
-| 命令   | save             | bgsave              |
-| ------ | ---------------- | ------------------- |
-| IO类型 | 同步             | 异步                  |
-| 阻塞?  | 是               | 是（阻塞发生在fork)    |
-| 复杂度 | O(n)             | o(n)                 |
-| 优点   | 不会消耗额外内存   | 不阻塞客户端命令        |
-| 缺点   | 阻塞客户端命令     | 需要fork,消耗内存      |
+| 命令    | save             | bgsave                |
+| ------- | ---------------- | --------------------- |
+| IO 类型 | 同步             | 异步                  |
+| 阻塞?   | 是               | 是（阻塞发生在 fork） |
+| 复杂度  | O(n)             | o(n)                  |
+| 优点    | 不会消耗额外内存 | 不阻塞客户端命令      |
+| 缺点    | 阻塞客户端命令   | 需要 fork，消耗内存   |
 
 ### 自动
 
-不需要客户端操作，根据配置自动执行rdb操作。
+不需要客户端操作，根据配置自动执行 rdb 操作。
 
 ![image-20210603182632417](https://z3.ax1x.com/2021/06/03/23sxFe.png)
 
@@ -65,26 +65,26 @@ rdb相关配置
 
 ```
 # 自动rdb配置
-save 900 1      #每900秒有1个key改变
-save 300 10     #每300秒有10个key改变
-save 60 10000   #每60秒有10000个key改变
+save 900 1      # 每 900 秒有 1 个 key 改变
+save 300 10     # 每 300 秒有 10 个 key 改变
+save 60 10000   # 每 60 秒有 10000 个 key 改变
 
-dbfilename dump.rdb               #指定rbd文件的名称
-dir ./                            #工作目录，rdb、aof、日志文件存在此目录
-stop-writes-on-bgsave-error yes   #如果bgsave发生错误是否停止写入
-rdbcompression yes                #rdb文件是否采用压缩的格式
-rdbchecksum yes                   #是否对rdb文件进行校验和检验
+dbfilename dump.rdb               # 指定 rbd 文件的名称
+dir ./                            # 工作目录，rdb、aof、日志文件 存在此目录
+stop-writes-on-bgsave-error yes   # 如果 bgsave 发生错误是否停止写入
+rdbcompression yes                # rdb 文件是否采用压缩的格式
+rdbchecksum yes                   # 是否对 rdb 文件进行校验和检验
 ```
 
-rdb配置最佳实践
+rdb 配置最佳实践
 
 ```
 #### 不开启自动保存 ####
 
-#由于redis单线程，通常一台机器上启动好几个redis实例，可以根据端口号区分rdb文件属于哪个实例
+# 由于 redis 单线程，通常一台机器上启动好几个 redis 实例，可以根据端口号区分 rdb 文件属于哪个实例
 dbfilename dump-${port}.rdb
 
-#自定义工作目录
+# 自定义工作目录
 dir /bigdiskpath
 
 stop-writes-on-bgsave-error yes
@@ -92,17 +92,17 @@ rdbcompression yes
 rdbchecksum yes
 ```
 
-## 2.3 rdb触发机制
+## 2.3 rdb 触发机制
 
-- 全量复制：主从复制的时候会生成rdb文件
-- debug reload：redis提供debug级别的重启，会生成rdb文件
-- shutdown：执行`shutdown save`会生成rdb文件
+- 全量复制：主从复制的时候会生成 rdb 文件
+- debug reload：redis 提供 debug 级别的重启，会生成 rdb 文件
+- shutdown：执行 `shutdown save` 会生成 rdb 文件
 
 # 三、AOF
 
-## 3.1 AOF介绍
+## 3.1 AOF 介绍
 
-RDB持久化的问题：
+RDB 持久化的问题：
 
 - 耗时耗性能：
 
@@ -112,17 +112,15 @@ RDB持久化的问题：
 
   ![image-20210604145708231](https://z3.ax1x.com/2021/06/04/2GjwuR.png)
 
-
-
-为了解决上述问题RDB的问题，redis还提供了AOF持久化方式。如下图所示，redis写命令都会记录到aof都会追加到aof文件中，重启redis后加载aof文件，恢复数据。
+为了解决上述问题RDB的问题，redis 还提供了 AOF 持久化方式。如下图所示，redis 写命令都会追加到 aof 文件中，重启 redis 后加载 aof 文件，恢复数据。
 
 ![image-20210604150016150](https://z3.ax1x.com/2021/06/04/2GvAM9.png)
 
-## 3.2 AOF的三种策略
+## 3.2 AOF 的三种策略
 
-- always：每一条命令都刷到aof文件中
-- everysec（默认）：每秒把缓冲区中的命令刷到aof文件中
-- no：由操作系统决定何时将缓冲区中命令刷到aof文件中
+- always：每一条命令都刷到 aof 文件中
+- everysec（默认）：每秒把缓冲区中的命令刷到 aof 文件中
+- no：由操作系统决定何时将缓冲区中命令刷到 aof 文件中
 
 ![image-20210604151348099](https://z3.ax1x.com/2021/06/04/2JS7es.png)
 
@@ -132,31 +130,31 @@ RDB持久化的问题：
 
 三种策略对比：
 
-| 命令     | 优点                   | 缺点                                |
-| -------- | ---------------------- | ----------------------------------- |
-| always   | 不丢失数据             | IO开销较大，一般的sata盘只有几百TPS |
-| everysec | 每秒一次fsync丢1秒数据 | 丢1秒数据                           |
-| no       | 不用管                 | 不可控                              |
+| 命令     | 优点                       | 缺点                                    |
+| -------- | -------------------------- | --------------------------------------- |
+| always   | 不丢失数据                 | IO 开销较大，一般的 sata 盘只有几百 TPS |
+| everysec | 每秒一次 fsync 丢 1 秒数据 | 丢 1 秒数据                             |
+| no       | 不用管                     | 不可控                                  |
 
-## 3.3 AOF重写
+## 3.3 AOF 重写
 
-### AOF重写介绍
+### AOF 重写介绍
 
-aof文件记录redis的写入命令，随着写入命令越来越多，aof文件将越来越大。为了解决这个问题，redis提供了aof重写机制。
+aof 文件记录 redis 的写入命令，随着写入命令越来越多，aof 文件将越来越大。为了解决这个问题，redis 提供了 aof 重写机制。
 
-aof重写会将写入命令中重复的、无效的、过时的等命令进行优化，使生成的aof文件很小。
+aof 重写会将写入命令中重复的、无效的、过时的等命令进行优化，使生成的 aof 文件很小。
 
 ![image-20210604155011373](https://z3.ax1x.com/2021/06/04/2JnvLt.png)
 
-### aof重写的优点
+### aof 重写的优点
 
 - 减少硬盘占用量
 - 加速恢复速度
 
-### aof重写实现的两种方式
+### aof 重写实现的两种方式
 
-1. bgrewriteaof 命令：类似于bgsave，fork出子进程异步进行aof重写
-2. AOF重写配置
+1. `bgrewriteaof` 命令：类似于 bgsave ，fork 出子进程异步进行 aof 重写
+2. AOF 重写配置
 
 **bgrewriteaof 命令**
 
@@ -164,29 +162,31 @@ aof重写会将写入命令中重复的、无效的、过时的等命令进行�
 
 **AOF 重写配置**
 
-| 配置名                      | 含义                                                         |
-| --------------------------- | ------------------------------------------------------------ |
-| auto-aof-rewrite-min-size   | AOF文件重写需要的尺寸（即当AOF文件超过多大时开始重写）       |
-| auto-aof-rewrite-percentage | AOF文件增长率（比如配置100，这次200M重写了，下次就是400M重写） |
+| 配置名                      | 含义                                                                 |
+| --------------------------- | -------------------------------------------------------------------- |
+| auto-aof-rewrite-min-size   | AOF 文件重写需要的尺寸（即当 AOF 文件超过多大时开始重写）            |
+| auto-aof-rewrite-percentage | AOF 文件增长率（比如配置 100，这次 200M 重写了，下次就是 400M 重写） |
 
-redis中还有两个统计数据
+redis 中还有两个统计数据
 
-- aof_current_size：AOF当前尺寸（单位：字节）
-- aof_base_size：AOF上次启动和重写的尺寸（单位：字节）
+- `aof_current_size`：AOF 当前尺寸（单位：字节）
+- `aof_base_size`：AOF 上次启动和重写的尺寸（单位：字节）
 
-当同时满足以下条件时，自动触发aof重写
+当同时满足以下条件时，自动触发 aof 重写
 
 - `aof_current_size > auto-aof-rewrite-min-size `
 - `(aof_current_size - aof_base_size) / aof_base_size > auto-aof-rewrite-percentage`
 
-AOF重写流程：
+AOF 重写流程：
 
 ![image-20210604162310804](https://z3.ax1x.com/2021/06/04/2J351U.png)
 
-1. 无论是执行 bgrewriteaof 命令还是自动触发，AOF重写最终本质都会执行 bgrewriteaof 操作
-2. 主进程会fork出一个子进程，来执行aof操作
-3. aof_buf 记录了现有的内存数据，将这些数据更新到旧的aof文件中（内存回溯）
-4. aof_rewrite_buf 记录了重写期间的写命令，会记录在一个新的aof文件中，最后合并到旧aof文件中
+1. 无论是执行 `bgrewriteaof` 命令还是自动触发，AOF 重写最终本质都会执行 `bgrewriteaof` 操作
+2. 主进程会 fork 出一个子进程，来执行 aof 操作
+3. `aof_buf` 记录了现有的内存数据，将这些数据更新到旧的 aof 文件中（内存回溯）
+4. `aof_rewrite_buf` 记录了重写期间的写命令，会记录在一个新的aof文件中，最后合并到旧aof文件中
+
+推荐参考：[Redis 之 AOF 重写及其实现原理](https://blog.csdn.net/hezhiqiang1314/article/details/69396887)
 
 ## 3.4 AOF相关配置
 
@@ -201,25 +201,25 @@ auto-aof-rewrite-min-size 64mb           #aof重写尺寸
 aof-load-truncated yes                   #是否加载被截断的aof文件（例如刷入aof文件途中宕机了）
 ```
 
-# 四、RDB和AOF选择
+# 四、RDB 和 AOF 选择
 
-**RDB和AOF对比**
+**RDB 和 AOF 对比**
 
-| 命令 | RDB | AOF |
-| --- | --- | --- |
-| 启动优先级 | 低 | 高 |
-| 体积 | 小 | 大 |
-| 恢复速度 | 快 | 慢 |
+| 命令       | RDB    | AOF          |
+| ---------- | ------ | ------------ |
+| 启动优先级 | 低     | 高           |
+| 体积       | 小     | 大           |
+| 恢复速度   | 快     | 慢           |
 | 数据安全性 | 丢数据 | 根据策略决定 |
-| 轻重 | 重 | 轻 |
+| 轻重       | 重     | 轻           |
 
-**RDB最佳策略**
+**RDB 最佳策略**
 
-- ”关“
+- “关”
 - 集中管理
 - 主从，从开？
 
-**AOF最佳策略**
+**AOF 最佳策略**
 
 - “开”：缓存和存储
 - AOF重写集中管理
@@ -234,56 +234,55 @@ aof-load-truncated yes                   #是否加载被截断的aof文件（�
 
 # 五、持久化开发运维问题
 
-## 5.1 fork操作
+## 5.1 fork 操作
 
-- 同步操作：Fork操作只是做内存页的拷贝，而不是做整个内存的拷贝，所以说，大部分情况下速度是非常快的，但是如果本身的fork操作比较慢，或者是卡在了某个地方，那么它就会阻塞redis的主线程。
-- 与内存量息息相关：内存越大，耗时越长(与机器类型有关）
+- 同步操作：Fork 操作只是做内存页的拷贝，而不是做整个内存的拷贝，所以说，大部分情况下速度是非常快的，但是如果本身的 fork 操作比较慢，或者是卡在了某个地方，那么它就会阻塞 redis 的主线程。
+- 与内存量息息相关：内存越大，耗时越长（与机器类型有关）
 - `info:latest fork usec`：该参数用来查上一次持久化的执行时间，用来辅助对持久化文件内存相关信息进行监控
 
-改善fork：
+改善 fork：
 
-- 优先使用物理机或者高效支持fork操作的虚拟化技术
-- 控制Redis实例最大可用内存：maxmemory
-- 合理配置Linux内存分配策略：vm.overcommit_memory=1
-- 降低fork频率：例如放宽AOF重写自动触发时机，不必要的全量复制
-- 降低fork频率：例如放宽AOF重写自动触发时机，不必要的全量复制
+- 优先使用物理机或者高效支持 fork 操作的虚拟化技术
+- 控制 Redis 实例最大可用内存：maxmemory
+- 合理配置 Linux 内存分配策略：vm.overcommit_memory=1
+- 降低 fork 频率：例如放宽 AOF 重写自动触发时机，不必要的全量复制
 
 ## 5.2 子进程开销和优化
 
 1. CPU
-   - 开销：RDB和AOF文件生成，属于CPU密集型
-   - 优化：不做CPU绑定，不和CPU密集型部署
+   - 开销：RDB 和 AOF 文件生成，属于 CPU 密集型
+   - 优化：不做 CPU 绑定，不和 CPU 密集型部署
 2. 内存
-   - 开销：fork内存开销，copy-on-write。
+   - 开销：fork 内存开销，copy-on-write。
    - 优化：`echo never > /sys/kernel/mm/transparent_hugepage/enabled`
 3. 硬盘
-   - 开销：AOF和RDB文件写入，可以结合iostat、iotop分析
+   - 开销：AOF 和 RDB 文件写入，可以结合 iostat、iotop 分析
    - 优化：
      - 不要和高硬盘负载服务部署一起 ： 存储服务、消息队列等
      - `no-appendfsync-on-rewrite = yes`
-     - 根据写入量决定磁盘类型：例如ssd
+     - 根据写入量决定磁盘类型：例如 ssd
      - 单机多实例持久化文件目录可以考虑分盘
 
-## 5.3 AOF追加阻塞
+## 5.3 AOF 追加阻塞
 
 ![image-20210604171702424](https://z3.ax1x.com/2021/06/04/2J4KsS.png)
 
-如果我们使用AOF进行持久化，那么，一般会使用呢每秒刷盘的策略。主线程将数据加载到缓冲区，同时它还有一个AOF同步线程，去负责每秒同步刷盘操作。主线程还会负责一项工作，主线程会对比上次AOF同步的时间，如果上次同步时间在两秒之内，主线程就会返回；如果距离上次同步时间超过了两秒，主线程会阻塞，直到同步完成。实际上，这也是为了达到保证AOF同步安全的一种策略，所以为了达到这一目的，它会一直阻塞直到达到同步完成。
+如果我们使用 AOF 进行持久化，那么一般会使用每秒刷盘的策略。主线程将数据加载到缓冲区，同时它还有一个 AOF 同步线程，去负责每秒同步刷盘操作。主线程还会负责一项工作，主线程会对比上次 AOF 同步的时间，如果上次同步时间在 2 秒之内，主线程就会返回；如果距离上次同步时间超过了 2 秒，主线程会阻塞，直到同步完成。实际上，这也是为了达到保证 AOF 同步安全的一种策略，所以为了达到这一目的，它会一直阻塞直到达到同步完成。
 
 但是，这里会产生两个问题：
 
 1. 主线程是不能阻塞的，因为主线程要负责日常命令的处理，是非常宝贵的资源
-2. 每秒刷盘的策略可能不只会丢失一秒，而是可能会丢失两秒的数据
+2. 每秒刷盘的策略可能不只会丢失 1 秒，而是可能会丢失 2 秒的数据
 
-**AOF阻塞定位**
+**AOF 阻塞定位**
 
-定位AOF阻塞有两重方式，查看redis日志和执行 `info Persistence` 命令。
+定位 AOF 阻塞有两重方式，查看 redis 日志和执行 `info Persistence` 命令。
 
-方式一：redis日志
+方式一：redis 日志
 
 ![image-20210604172244123](https://z3.ax1x.com/2021/06/04/2J5ckj.png)
 
-在redis日志中，有这么一段，它会告诉你，你的异步AOF同步可能花了太长时间了，你的磁盘是不是有问题，而且这个过程有可能拖慢你的redis。
+在 redis 日志中，有这么一段，它会告诉你，你的异步 AOF 同步可能花了太长时间了，你的磁盘是不是有问题，而且这个过程有可能拖慢你的 redis。
 
 方式二：命令
 

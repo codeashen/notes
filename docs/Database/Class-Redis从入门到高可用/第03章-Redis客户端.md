@@ -19,25 +19,25 @@ Redis客户端的选择：[官网列表](https://redis.io/clients)，里面罗�
 </dependency>
 ```
 
-创建Jedis连接对象
+创建 Jedis 连接对象
 
 ```java
-// 1.生成一个Jedis对象，这个对象负责和指定Redis节点进行通信 
+// 1. 生成一个 Jedis 对象，这个对象负责和指定 Redis 节点进行通信 
 Jedis jedis = new Jedis("127.0.0.1", 6379); 
-// 2.jedis执行set操作 
+// 2. jedis 执行 set 操作 
 jedis.set("hello", "world"); 
-// 3.jedis执行get操作，value="world"
+// 3. jedis 执行 get 操作，value="world"
 String value = jedis.get("hello");
 ```
 
-> Jedis客户端构造函数：
+> Jedis 客户端构造函数：
 >
 > `Jedis(String host, int port, int connectionTimeout, int soTimeout)`
 >
-> * host：Redis节点的所在机器的IP
-> * port：Redis节点的端口 
-> * connectionTimeout：客户端连接超
-> * soTimeout：客户端读写超时
+> * `host`：Redis 节点的所在机器的 IP
+> * `port`：Redis 节点的端口 
+> * `connectionTimeout`：客户端连接超
+> * `soTimeout`：客户端读写超时
 
 简单使用
 
@@ -78,50 +78,50 @@ jedis.zadd("myzset", 33, "james");
 jedis.zrangeWithScores("myzset", 0, -1);
 ```
 
-## 1.2 Jedis直连和连接池
+## 1.2 Jedis 直连和连接池
 
-**1. Jedis直连**
+**1. Jedis 直连**
 
 ![Jedis直连](https://z3.ax1x.com/2021/06/02/2MErNV.png)
 
-**2. Jedis连接池**
+**2. Jedis 连接池**
 
 ![Jedis连接池](https://z3.ax1x.com/2021/06/02/2ME2jJ.png)
 
-Jedis连接池的基本使用：
+Jedis 连接池的基本使用：
 
 ```java
-// 初始化Jedis连接池，通常来讲JedisPool是单例的。
+// 初始化 Jedis 连接池，通常来讲 JedisPool 是单例的。
 GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig(); 
 JedisPool jedisPool = new JedisPool(poolConfig, "127.0.0.1", 6379);
 
 Jedis jedis = null; 
 try { 
-    // 1.从连接池获取jedis对象 
+    // 1. 从连接池获取 jedis 对象 
     jedis = jedisPool.getResource(); 
-    // 2.执行操作 
+    // 2. 执行操作 
     jedis.set("hello", "world"); 
 } catch (Exception e) { 
     e.printStackTrace;
 } finally { 
     if (jedis != null) 
-        // 如果使用JedisPool, close操作不是关闭连接，代表归还连接池 
+        // 如果使用 JedisPool, close 操作不是关闭连接，代表归还连接池 
         jedis.close(); 
 }
 ```
 
 **3. 方案对比**
 
-|        | 优点                                                         | 缺点                                                         |
-| ------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 直连   | - 简单方便<br>- 适用于少量长期连接的场景                     | - 存在每次新建/关闭TCP开销<br>- 资源无法控制，存在连接泄露的可能<br>- Jedis对象线程不安全 |
-| 连接池 | - Jedis预先生成，降低开销使用<br>- 连接池的形式保护和控制资源的使用 | 相对于直连，使用相对麻烦，尤其在资源的管理上需要很多参数来保证，一旦规划不合理也会出现问题 |
+|        | 优点                                                                 | 缺点                                                                                         |
+| ------ | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| 直连   | - 简单方便<br>- 适用于少量长期连接的场景                             | - 存在每次新建/关闭 TCP 开销<br>- 资源无法控制，存在连接泄露的可能<br>- Jedis 对象线程不安全 |
+| 连接池 | - Jedis 预先生成，降低开销使用<br>- 连接池的形式保护和控制资源的使用 | 相对于直连，使用相对麻烦，尤其在资源的管理上需要很多参数来保证，一旦规划不合理也会出现问题   |
 
-# 二、Python客户端：redis-py
+# 二、Python 客户端：redis-py
 
-参考github仓库：[andymccurdy/redis-py](https://github.com/andymccurdy/redis-py)
+参考 github 仓库：[andymccurdy/redis-py](https://github.com/andymccurdy/redis-py)
 
-**1. redis-py安装**
+**1. redis-py 安装**
 
 ```bash
 # 方式一:pip
@@ -137,7 +137,7 @@ try {
 > sudo python setup.py install
 ```
 
-**2. redis-py基本使用**
+**2. redis-py 基本使用**
 
 ```python
 # 导入使用
@@ -185,7 +185,7 @@ client.zadd("myzset", "33", "james")
 client.zrange("myzset", 0, -1, withscores=True)
 ```
 
-# 三、Go客户端：redigo
+# 三、Go 客户端：redigo
 
 连接：
 
