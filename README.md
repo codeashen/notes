@@ -32,6 +32,10 @@
 - [系统学习Docker践行DevOps理念](docs/DevOps/Class-Docker/第01章-容器技术和Docker简介.md)  [`课程`](https://coding.imooc.com/class/189.html)
 - [自动化部署三剑客](docs/DevOps/Class-自动化部署三剑客/第01章-Gitlab.md)  [`课程`](https://coding.imooc.com/class/253.html)
 
+### 算法与数据结构
+
+- [玩转算法面试](docs/Data%20Structures%20&%20Algorithms/Class-玩转算法面试/08-动态规划.md)  [`代码`](https://github.com/codeashen/DS-A-Journey/tree/master/Play-with-Algorithm-Interview)  [`课程`](https://coding.imooc.com/class/82.html)
+
 ### 计算机基础
 
 - [Linux基础](docs/Linux/Note-Linux.md)  
