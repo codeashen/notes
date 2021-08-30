@@ -34,7 +34,7 @@
 
 ### 算法与数据结构
 
-- [玩转算法面试](docs/Data%20Structures%20&%20Algorithms/Class-玩转算法面试/08-动态规划.md)  [`代码`](https://github.com/codeashen/DS-A-Journey/tree/master/Play-with-Algorithm-Interview)  [`课程`](https://coding.imooc.com/class/82.html)
+- [玩转算法面试](docs/Data%20Structures%20&%20Algorithms/Class-玩转算法面试/01-面试中的复杂度分析.md)  [`代码`](https://github.com/codeashen/DS-A-Journey/tree/master/Play-with-Algorithm-Interview)  [`课程`](https://coding.imooc.com/class/82.html)
 
 ### 计算机基础
 
