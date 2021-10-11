@@ -63,8 +63,13 @@
             const currentUri = document.location.hash
             href = currentUri.substr(0, currentUri.lastIndexOf('/') + 1) + href
             return `<a href='${href}'>${text}</a>`
-          },
-        }
+          }, 
+          paragraph: function (text) {
+            if (text === '[TOC]')  // 排除掉头部 [TOC]，不进行渲染
+              return ''
+            return `<p>${text}</p>`
+          }
+        },
       },
       // 翻页配置
       // pagination: {
