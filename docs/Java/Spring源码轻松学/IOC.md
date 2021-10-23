@@ -1,0 +1,77 @@
+```java
+@Override
+	public void refresh() throws BeansException, IllegalStateException {
+		synchronized (this.startupShutdownMonitor) {
+			// 刷新前的准备工作
+			// Prepare this context for refreshing.
+			prepareRefresh();
+
+			// 获取子类刷新后的内部 beanFactory 实例
+			// Tell the subclass to refresh the internal bean factory.
+			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+
+			// 为容器注册必要的系统级别的 bean
+			// Prepare the bean factory for use in this context.
+			prepareBeanFactory(beanFactory);
+
+			try {
+				// 允许容器的子类去注册 postProcessor
+				// Allows post-processing of the bean factory in context subclasses.
+				postProcessBeanFactory(beanFactory);
+
+				// 调用容器注册的容器级别的后置处理器
+				// Invoke factory processors registered as beans in the context.
+				invokeBeanFactoryPostProcessors(beanFactory);
+
+				// 向容器注册 bean 级别的后置处理器
+				// Register bean processors that intercept bean creation.
+				registerBeanPostProcessors(beanFactory);
+
+				// 初始化国际化配置
+				// Initialize message source for this context.
+				initMessageSource();
+
+				// 初始化事件发布器组件
+				// Initialize event multicaster for this context.
+				initApplicationEventMulticaster();
+
+				// 在单例 bean 初始化之前预留给子类初始化其他 bean 的口子
+				// 例如如果是 web 应用，其中完成内嵌 web 容器的创建
+				// Initialize other special beans in specific context subclasses.
+				onRefresh();
+
+				// 向前面的事件发布器组件注册事件监听器
+				// Check for listener beans and register them.
+				registerListeners();
+
+				// 设置系统级别的服务，实例化所有非懒加载的单例
+				// Instantiate all remaining (non-lazy-init) singletons.
+				finishBeanFactoryInitialization(beanFactory);
+
+				// 触发初始化完成的回调方法，并发布容器刷新完成的事件给监听者
+				// Last step: publish corresponding event.
+				finishRefresh();
+			} catch (BeansException ex) {
+				if (logger.isWarnEnabled()) {
+					logger.warn("Exception encountered during context initialization - " +
+							"cancelling refresh attempt: " + ex);
+				}
+                
+				// Destroy already created singletons to avoid dangling resources.
+				destroyBeans();
+                
+				// Reset 'active' flag.
+				cancelRefresh(ex);
+                
+				// Propagate exception to caller.
+				throw ex;
+			} finally {
+				// 重置 Spring 内核中的公共缓存
+				// Reset common introspection caches in Spring's core, since we
+				// might not ever need metadata for singleton beans anymore...
+				resetCommonCaches();
+			}
+		}
+	}
+```
+
