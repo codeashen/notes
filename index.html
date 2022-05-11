@@ -67,7 +67,7 @@
           }, 
           // 渲染图片。添加标题
           image: function (href, title, text) {
-            if (title || escape(text).indexOf("%u") > 0) {
+            if (title || escape(text).indexOf("%u") !== -1) {
               return `<div style='color:#7d7d7d;text-align:center;display:inline-block;line-height:100%;'>
                 <img src='${href}' alt='${title}' />
                 <div>${title || text}</div>
