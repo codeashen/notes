@@ -1,0 +1,101 @@
+[TOC]
+
+# ConfigMap
+
+一般用 ConfigMap 去管理一些配置文件、或者一些大量的环境变量信息，ConfigMap 将配置和 Pod 分开。
+
+比如有一个 nginx 服务，基于 nginx.conf 配置文件提供服务。如果将配置文件打到镜像里，修改配置不方便。可以将 nginx.conf 保存到 ConfigMap，由 nginx 读取这个 ConfigMap 的内容。
+
+更易于配置文件的更改和管理。
+
+> ConfigMap 的创建和使用参考 [附录](https://www.notion.so/ConfigMap-Secret-5cc0ed86e5414180aff2abc9d43798bd) 。
+
+# Secret
+
+Secret更倾向于存储和共享敏感、加密的配置信息。用来保存敏感信息的，比如密码、令牌或者Key，Redis、MySQL密码。
+
+Secret用途：
+
+**`ImagePullSecret`**：Pod 拉取私有镜像仓库时使用的账户密码，里面的账户信息，会传递给 kubelet，然后 kubelet 就可以拉取有密码的仓库里面的镜像。
+
+关于 ImagePullSecret 使用参考官方文档：
+
+- [为 Pod 指定 ImagePullSecrets](https://kubernetes.io/zh/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod)
+- [为 ServiceAccount 添加 ImagePullSecrets](https://kubernetes.io/zh/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account)
+
+# subPath 解决文件覆盖问题
+
+ConfigMap 和 Secret 挂在 Volume 会覆盖目录，即想把 ConfigMap 中的文件挂载到容器的一个目录中，会把该目录中的其他文件都覆盖掉，只剩下挂载进去的文件了。
+
+例如一个 nginx 资源，想挂载 nginx.conf 到 /etc/nginx/ 路径下，会覆盖掉该路径的其他配置文件。
+
+可以使用 subPath 方式解决这个问题，具体步骤如下：
+
+1. 准备一个 nginx.conf 文件，基于文件创建 ConfigMap
+
+   ```bash
+   kubectl create cm nginx-conf --from-file=nginx.conf
+   kubectl get cm
+   ```
+
+2. 创建资源，使用 subPath 挂载 Volume
+
+   ```yaml
+   apiVersion: apps/v1
+   kind: Deployment
+   spec:
+     template:
+       spec:
+         containers:
+         - command:
+           - sh
+           - -c
+           - sleep 3600
+           image: nginx
+           imagePullPolicy: IfNotPresent
+           name: nginx
+           ports:
+           - name: web
+             containerPort: 80
+             protocol: TCP
+           **volumeMounts:
+           - name: config-volume  #用下面volumes一项的name
+             mountPath: /etc/nginx/nginx.conf
+             subPath: etc/nginx/nginx.conf
+         volumes:
+         - name: config-volume
+           configMap:
+             name: nginx-conf
+             items:
+             - key: nginx.conf   #ConfigMap的名称
+               path: etc/nginx/nginx.conf**
+         restartPolicy: Always
+   ```
+
+# ConfigMap/Secret 自动更新
+
+当某个 ConfigMap 或 Secret 更新后，原先引用过它的资源里的内容也会被更新。kubelet 在每次周期性同步时都会检查已挂载的 ConfigMap 是否是最新的，更新延迟与 kubelet 同步周期和 ConfigMap 缓存过期时间有关。
+
+> ConfigMap 和 Secret 如果是以 subPath 的形式挂载的，那么 Pod 是不会感知到 ConfigMap 和 Secret 的更新的。
+>
+> 如果 Pod 的变量来自于 ConfigMap 和 Secret 中定义的内容，那么 ConfigMap 和 Secret 更新后，也不会更新 Pod 中的变量。
+
+postStart：容器启动之前执行的命令
+
+preStop：容器停止之前执行的命令
+
+# 不可变 ConfigMap/Secret
+
+可以使用 `immutable: true` 来将 ConfigMap/Secret 设置为不可变的，就不能更新配置内容了，提高安全性。
+
+一旦设置为不可变，就不能更新配置内容，只能删除后重建。
+
+# 附录：相关官方文件
+
+- [ConfigMap 概述](https://kubernetes.io/zh/docs/concepts/configuration/configmap/)
+- [配置 Pod 使用 ConfigMap](https://kubernetes.io/zh/docs/tasks/configure-pod-container/configure-pod-configmap/)
+- [使用 ConfigMap 来配置 Redis](https://kubernetes.io/zh/docs/tutorials/configuration/configure-redis-using-configmap/)
+- [Secret 概述](https://kubernetes.io/zh/docs/concepts/configuration/secret/)
+- [管理 Secret](https://kubernetes.io/zh/docs/tasks/configmap-secret/)
+- [为 Pod 指定 ImagePullSecrets](https://kubernetes.io/zh/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod)
+- [为 ServiceAccount 添加 ImagePullSecrets](https://kubernetes.io/zh/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account)
