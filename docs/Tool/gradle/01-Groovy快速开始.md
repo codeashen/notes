@@ -1,0 +1,59 @@
+[TOC]
+
+# Groovy 简介
+
+## 领域特定语言 DSL
+
+领域特定语言 DSL 全程 domain specific language，其基本思想是“求专不求全”，不像通用目的语言那样目标范围涵盖一切软件问题，而是专门针对某一特定问题的计算机语言。
+
+就像 matlab 是一种计算语言，只能用来做计算；UML 建模语言，用来将现实模型表示为计算机模型，也是 DSL 的一种；更常见的 HTML 也可以算作 DSL 的一种，专门做浏览器可识别的网页。
+
+## Groovy 简介
+
+- 是一种基于 JVM 的敏捷开发语言
+- 结合了 Python、Ruby 和 Smalltalk 的许多强大的特性
+- Groovy 可以与 Java 完美结合，而且可以使用 Java 中所有的库
+- 语法上支持动态类型，闭包等新一代语言特性
+- 无缝集成所有已存在的 Java 类库
+- 及支持面向对象变成也支持面向过程编程
+
+## Groovy 优势
+
+- 一种更加敏捷的变成语言
+- 入门非常的容易，但功能非常的强大
+- 既可以作为编程语言也可以作为脚本语言
+- 熟练掌握 Java 的同学非常容易掌握 Groovy
+
+# Groovy 快速入门
+
+## 环境搭建
+
+1. 安装好 JDK 环境；
+2. 官网下载 Groovy SDK，解压到适合位置，或者直接使用相应的包管理工具安装，如 Homebrew、scoop 等；
+3. 配置环境变量到安装路径下的 `/bin` 路径。
+
+## 创建 Groovy 工程
+
+IDEA 中创建 Groovy Project，可以创建 Grovvy Class 或者 Grovvy Script。
+
+![image-20220526232328501](https://cc.hjfile.cn/cc/img/20220526/2022052611233361940707.png)
+
+Groovy Class 文件：HelloClass.groovy
+
+```groovy
+package helloworld
+
+class HelloClass {
+    static void main(String[] args) {
+        System.out.println("Hello, World!")
+    }
+}
+```
+
+Groovy Script 文件：HelloScript.groovy
+
+```groovy
+package helloworld
+
+println "hello groovy"
+```
