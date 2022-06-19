@@ -1,0 +1,90 @@
+[TOC]
+
+# Settings
+
+前面我们介绍 `org.gradle.api.Project` 的根据 build.gradle 文件来初始化的，这里介绍的 `org.gradle.api.initialization.Settings` 是根据 settings.gradle 文件来初始化的。Settings 的作用就是决定本工程中哪些子工程是需要被 gradle 处理的。
+
+所以 Settings 接口就对用这根工程下的 settings.gradle 文件，可以在该文件中调用 Settings 接口中的方法。Settings 接口中最核心的方法就是 include 方法引入工程，引入后 gradle 就会处理该子工程。
+
+Settings 对应了 gradle 的初始化阶段，初始化阶段就是在执行 settings.gradle 中的逻辑。
+
+# SourceSet
+
+为什么 gradle 如何知道工程源码在 `src/main/java` 下呢？其实就是从 SourceSet 类的配置中获取的，SourceSet 决定了代码、资源、第三方库等存放的位置。
+
+SourceSet 接口约定了很多默认配置，这些配置可以被修改。在需要修改的工程的 build.gradle 文件中使用 sourceSets 方法修改。
+
+```groovy
+sourceSets {
+    main {
+        // 修改java源码路径
+        java.srcDir('src/main/java')
+        // 修改资源文件路径
+        resources.srcDir('src/main/resources')
+    }
+}
+```
+
+一般使用默认约定即可。
+
+# 自定义 Plugin
+
+可以将完成特定功能的所有 Task 封装在一个插件中，其他项目只需要引入该插件就可以使用其功能。
+
+要创建一个插件，先要创建一个插件工程，插件工程目录结构如下：
+
+![image-20220619185606612](https://cc.hjfile.cn/cc/img/20220619/2022061906560815120227.png)
+
+build.gradle
+
+```groovy
+apply plugin: 'groovy'
+
+sourceSets {
+    main {
+        groovy {
+            srcDir 'src/main/groovy'
+        }
+
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+```
+
+com.ashen.gradle.study.properties
+
+```properties
+implementation-class=com.ashen.gradle.study.GradleStudyPlugin
+```
+
+GradleStudyPlugin
+
+```groovy
+package com.ashen.gradle.study
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+
+/**
+ * 自定义 Plugin
+ */
+class GradleStudyPlugin implements Plugin<Project> {
+    /**
+     * 插件的执行方法
+     * @param project 引入当前插件的 Project 对象
+     */
+    @Override
+    void apply(Project project) {
+        println "Hello Plugin, this is ${project.name}"
+    }
+}
+```
+
+其他工程使用该插件
+
+```groovy
+apply plugin: 'com.ashen.gradle.study'
+```

@@ -8,7 +8,7 @@
 
   以图中工程项目为例，如果在 maven 项目中，我们习惯将 hello-gradle 称为 project，称其中的 common、facade、service 为 module。但在 gradle 项目中，它们其实都是 project。
 
-- 每个 build.gradle 对应一个 project
+- 每个 build.gradle 对应一个 project，根据 build.gradle 文件来初始化 `org.gradle.api.Project` 接口的实例。
 
 我们可以执行 `./gradlew project` 命令查看 project 结构，输出中会看到如下内容，即根 project 下有三个子 project。
 
@@ -38,11 +38,17 @@ Project 的 API 非常多，大致可以分为以下六个部分。
 - gradle 生命周期 api，提供一些钩子函数，上一章介绍过；
 - 其他 api，零散的一些 api，包括添加依赖，添加配置，引入外部文件等。
 
+> 本章介绍的所有 Project 的 API 都是 `org.gradle.api.Project` 接口中的方法，可以通过源码和文档注释查看详细信息。
+>
+> 另：idea 中要看 gradle 相关源码，要使用在设置中配置本地安装的 gradle。
+
 # Project API 详解
 
-## Project
+## 工程相关
 
-查找 project 的 api：
+### 查找工程
+
+Project 接口提供了查找 project 相关的 api：
 
 - `getAllProjects`：获取当前 project 及其所有子 project
 
@@ -69,15 +75,18 @@ Project 的 API 非常多，大致可以分为以下六个部分。
   this.getProjects()
   ```
 
-  可以通过以上 api 找到相应的 project，然后通过 project 相关 api 来配置 project。gradle 还提供了更强大的 api 来直接对想要管理的 project 进行操作。
+
+### 配置工程
+
+可以通过以上 api 找到相应的 project，然后通过 Project 相关 api 来配置工程。Project 接口还提供了更强大的 api 来直接操作工程。
 
 - `project` ：配置指定子工程
 
   ```groovy
   /**
-   * 使用给定路径和闭包配置项目
+   * 通过路径定位项目，并使用给定的闭包对其进行配置。
    *
-   * @param path 工程项目
+   * @param path 路径
    * @param configureClosure 用来配置项目的闭包
    * @return 指定的工程，从不返回null
    * @throws UnknownProjectException 如果项目不存在
@@ -90,7 +99,7 @@ Project 的 API 非常多，大致可以分为以下六个部分。
   ```groovy
   project('app') { Project project ->
       apply { plugin: 'com.android.application' }
-      group "com.imooc"
+      group "com.ashen"
       version "1.0.0-release"
       dependencies {}
       
@@ -102,7 +111,7 @@ Project 的 API 非常多，大致可以分为以下六个部分。
 
   ```groovy
   allprojects() {
-      group "com.imooc"
+      group "com.ashen"
       version "1.0.0-release"
   }
   
@@ -114,28 +123,366 @@ Project 的 API 非常多，大致可以分为以下六个部分。
 
   ```groovy
   subprojects {
+      // 配置工程信息
+      group = "com.ashen"
+      version = "1.0.0-release"
+      
       // 自定义的 gradle 脚本，将工程推到 maven 仓库
       apply from: '../publishToMaven.gradle'
   }
   ```
 
-## 属性
+## 属性相关
 
+我们先来看下 Project 类自带的一些属性
 
+```java
+@HasInternalProtocol
+public interface Project extends Comparable<Project>, ExtensionAware, PluginAware {
+    /**
+     * 构建工程的默认文件名
+     */
+    String DEFAULT_BUILD_FILE = "build.gradle";
 
+    /**
+     * 项目和任务的路径分隔符
+     */
+    String PATH_SEPARATOR = ":";
 
+    /**
+     * 工程的默认输出文件夹
+     */
+    String DEFAULT_BUILD_DIR_NAME = "build";
 
+    /**
+     * 属性配置文件
+     */
+    String GRADLE_PROPERTIES = "gradle.properties";
 
+    String SYSTEM_PROP_PREFIX = "systemProp";
 
+    String DEFAULT_VERSION = "unspecified";
 
+    String DEFAULT_STATUS = "release";
 
+    //.......
+}
+```
 
+其实自带的属性非常少，gradle 项目还可以为 project 扩展属性，来添加任何想要的属性，以满足各种各样的构建需求。
 
+以如下 build.gradle 文件为例，配置中很多地方用到了字符串，我们有时候希望将这些字符串提取出来统一管理，类似于 maven 项目的 pom 文件中用 properties 标签管理属性一样。
 
+```groovy
+group 'org.ashen'
+version '1.0-SNAPSHOT'
 
+dependencies {
+  implementation('org.springframework:spring-core:5.3.21')
+  testImplementation('org.junit.jupiter:junit-jupiter-api:5.8.1')
+}
+```
 
+gradle 工程中提供两种方式拓展属性：① ext 方法配置属性；② gradle.properties 文件配置属性。
 
+### ext 配置属性
 
+**版本一：定义变量的方式管理属性。（不推荐）**
 
+可以将需要统一管理的属性提取成变量，原来直接使用字符串的地方使用变量名代替。
 
+```groovy
+// 定义变量管理属性
+def springVersion = '5.3.21'
+def junitVersion = '5.8.1'
 
+// 使用变量名代替原有的字符串
+dependencies {
+  implementation("org.springframework:spring-core:${springVersion}")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+}
+```
+
+> 注意：下面的 spring 坐标中包含 `${springVersion}` 表达式，要使用双引号的 GString，忘记的看第二章字符串的定义。
+
+**版本二：使用 ext 配置拓展属性。**
+
+在 build.gradle 中定义使用 ext 加闭包来定义属性，在需要的地方以 `this.属性名` 的方式使用属性。
+
+```groovy
+// 使用 ext 传入闭包定义扩展属性
+ext {
+  springVersion = '5.3.21'
+  junitVersion = '5.8.1'
+}
+
+// 使用 ext 中定义的扩展属性
+dependencies {
+  implementation("org.springframework:spring-core:${this.springVersion}")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:${this.junitVersion}")
+}
+```
+
+> ext 语句块中定义的属性通过 `this.属性名` 使用，其中 `this.` 可以省略，下面介绍的几个版本同样也是。
+
+**版本三：ext 配合 project api 统一配置属性。**
+
+版本二的缺点是，多个 project 的 build.gradle 中都要重复定义 ext，可以使用 subprojects 这样的 api 来统一定义。
+
+```groovy
+// 在根工程中使用为所有的子工程配置统一的 ext
+subprojects {
+  ext {
+    springVersion = '5.3.21'
+    junitVersion = '5.8.1'
+  }
+}
+```
+
+这样相当于为每个子工程都注入了相同的属性配置，这样只需要定义一次，所有的子工程中就都可以通过 `this.属性名` 使用扩展属性了。
+
+**版本四：使用继承的属性。**
+
+版本三的本质还是在每个子工程中都定义了一个 ext 语句块，只不过是 project 的 api 帮我们完成的，可不可以真正只定义一份配置呢。
+
+在根功能中配置属性，子工程中通过 `this.rootProject.属性名` 来使用根工程中定义的属性。
+
+```groovy
+// 在根工程中配置属性
+ext {
+  springVersion = '5.3.21'
+  junitVersion = '5.8.1'
+}
+```
+
+```groovy
+// 子工程中使用根工程的属性
+dependencies {
+  implementation("org.springframework:spring-core:${this.rootProject.springVersion}")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:${this.rootProject.junitVersion}")
+}
+```
+
+并且 `this.rootProject` 可以省略，因为子工程会继承父工程中的属性。
+
+这种管理属性的方式，所有属性只定义了一次，也只编译生成了一次，就可以在所有的工程中使用了。
+
+**版本四：使用单独的 gradle 文件定义 ext 语句块，用 apply 引入文件配置。**
+
+定义一个 common.gradle 文件，将 ext 语句块配置在其中。
+
+```groovy
+ext {
+  springVersion = '5.3.21'
+  junitVersion = '5.8.1'
+}
+```
+
+根工程中用 apply 来引入 common.gradle
+
+```groovy
+apply from: this.file('common.gradle')
+```
+
+然后就可以在所有工程中通过 `this.属性名` 使用属性了。
+
+### gradle.properties 配置属性
+
+gradle.properties 是 gradle 工程的默认配置文件，其中可以配置一些内容，下面通过一个需求来介绍。
+
+需求：根工程下有一个子工程 test，需要通过一个属性配置来控制是否加载 test 工程。
+
+在工程根路径创建 gradle.properties 文件。
+
+```properties
+# 控制是否加载test工程
+isLoadTest=true
+```
+
+我们知道 settings.gradle 文件中定义了工程机构，所以可以在该文件中控制是否加载 test 子工程。
+
+```groovy
+rootProject.name = 'hello-gradle'
+
+include 'common'
+include 'facade'
+include 'service'
+
+// 根据 inLoadTest 配置是否加载 test 子工程，默认不加载
+if (hasProperty('isLoadTest') ? isLoadTest.toBoolean() : false) {
+    include 'test'
+}
+```
+
+## 文件相关
+
+前面介绍 Groovy 语法的时候介绍过文件操作相关的 api，同样可以在 gradle 工程中使用。本小节介绍的 Project 接口中 file 相关的 api，用于在 gradle 中更方便的对文件进行操作，主要内容如下图。
+
+![image-20220619012608108](https://cc.hjfile.cn/cc/img/20220619/2022061901261118185180.png)
+
+### 路径获取
+
+```groovy
+// 获取根工程路径
+println getRootDir().absolutePath
+// 获取当前工程路径
+println getProjectDir().absolutePath
+// 获取当前工程输出路径
+println getBuildDir().absolutePath
+```
+
+### 文件操作
+
+**（1）文件定位**
+
+文件定位相关 api 有下面两个及其重载，方法接收的路径是相对与当前工程的路径，如 `file('a.txt')` 会在当前工程路径下查找 a.txt，避免了通过绝对路径定位文件。
+
+- `File file(Object path);`：获取当前工程下的文件
+- `ConfigurableFileCollection files(Object... paths);`：获取当前工程下的文件集合
+
+示例：打印当前工程下的文件内容
+
+```groovy
+def getContent(String path) {
+    try {
+        def file = file(path)
+        return file.text
+    } catch (Exception e) {
+        println "file not found: ${path}"
+    }
+    return null
+}
+
+println getContent('settings.gradle')
+```
+
+**（2）文件拷贝**
+
+Groovy 介绍文件操作式，拷贝文件是从一个文件中一行行读取，再写入到另一个文件中。Project 接口提供的文件 api 可以更简便地拷贝文件。
+
+- `WorkResult copy(Closure closure);`：复制指定的文件。给定的闭包用于配置CopySpec ，然后用于复制文件。
+
+例子：
+
+```groovy
+copy {
+   from configurations.runtimeClasspath
+   into 'build/deploy/lib'
+}
+```
+
+闭包中还可以配置更复杂的内容：
+
+```groovy
+copy {
+   into 'build/webroot'
+   exclude '**&#47;.svn/**'
+   from('src/main/webapp') {
+      include '**&#47;*.jsp'
+      filter(ReplaceTokens, tokens:[copyright:'2009', version:'2.3.1'])
+   }
+   from('src/main/js') {
+      include '**&#47;*.js'
+   }
+}
+```
+
+**（3）遍历文件树**
+
+- `ConfigurableFileTree fileTree(Object baseDir);`：根据路径查找文件树
+
+使用示例：
+
+```groovy
+fileTree('build/outputs/apk/') { FileTree filetree ->
+    fileTree.visit { FileTreeElement element ->
+        println 'the file name is: ' + element.file.name
+        copy {
+            from element.file
+            into getRootProject().getBuildDir().path + '/test/'
+        }
+    }
+}
+```
+
+## 依赖相关
+
+Project 接口提供了管理整个项目依赖的 api
+
+- `void buildscript(Closure configureClosure)`：配置工程的构建脚本，接收一个闭包 ScriptHandler。
+
+```groovy
+buildscript() {
+    // 配置工程的仓库地址
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    
+    // 配置工程的”插件“地址
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+    }
+}
+```
+
+注意 buildscript 中传入的 ScriptHandler 闭包可以设置 dependencies，在 build.gradle 文件最外层也可以设置 dependencies，二者作用完全不同。
+
+- ScriptHandler 闭包中 dependencies 是用来配置编写 gradle 文件所需要的依赖，如编写构建过程中需要的用到第三方库的 api。
+- build.gradle 文件中的 dependencies 是用来配置应用程序所需要的依赖，如编写的是 web 应用，需要依赖 Spring 等。
+
+下面我们介绍应用依赖管理。
+
+**应用引入依赖的三种方式**
+
+```groovy
+dependencies {
+  // 引入本地文件jar包，可以使用 file/files/fileTree 引入一个或多个依赖
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  // 通过坐标引入依赖
+  implementation 'org.springframework:spring-core:5.3.21'
+  // 引入其他子工程，如 service 依赖 common
+  implementation project('common')
+}
+```
+
+注：compile 在 gradle 中已经被弃用，被 implementation 代替。
+
+**解决依赖冲突**
+
+```groovy
+dependencies {
+  implementation('org.springframework:spring-context:5.3.21') {
+    // 排除单个依赖
+    exclude(module: 'org.springframework:spring-core')
+    // 排除指定group下的所有依赖
+    exclude(group: 'org.springframework')
+    // 禁用传递依赖（本工程不能使用传递依赖的内容）
+    transitive(false)
+  }
+}
+```
+
+## 外部命令执行
+
+不同操作系统上的不同命令，在 gradle 中都是可以运行的。下例中定义了一个 task，逻辑是使用 bash 命令将 apk 拷贝到桌面。
+
+```groovy
+task('apkcopy') {
+    // gradle的执行阶段去执行
+    doLast {
+        def sourcePath = this.buildDir.path + '/outputs/apk'
+        def targetPath = '/Users/CodeAshen/Desktop/'
+        def command = 'cp -r ' + sourcePath + ' ' + targetPath
+        exec {
+            try {
+                executable 'bash'   //执行器
+                args '-c', command  //执行参数
+                println "copy apk success"
+            } catch (Exception e) {
+                println "copy apk failed"
+            }
+        }
+    }
+}
+```
