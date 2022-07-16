@@ -2,6 +2,7 @@
 - [Book-深入理解Java虚拟机.md](Book-深入理解Java虚拟机.md)
 - [Class-Spring-Cloud](Class-Spring-Cloud/README.md)
 - [Class-Spring-Cloud-Alibaba](Class-Spring-Cloud-Alibaba/README.md)
+- [Java设计模式](Java设计模式/README.md)
 - [Note-JavaSE-Base.md](Note-JavaSE-Base.md)
 - [Spring Boot 2.0深度实践](Spring%20Boot%202.0深度实践/README.md)
 - [Spring源码轻松学](Spring源码轻松学/README.md)
