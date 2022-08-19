@@ -3,7 +3,6 @@
 - [Database](Database/README.md)
 - [DevOps](DevOps/README.md)
 - [FrontEnd](FrontEnd/README.md)
-- [Interview](Interview/README.md)
 - [Java](Java/README.md)
 - [Linux](Linux/README.md)
 - [Microservice](Microservice/README.md)
