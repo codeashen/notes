@@ -1,0 +1,339 @@
+[TOC]
+
+# 初识 Module
+
+什么是模块？模块是一个一个的局部作用域的代码块。
+
+模块系统解决的主要问题：
+
+- 模块化的问题
+- 消除全局变量
+- 管理加载顺序
+
+我们用一个例子解释模块的这些作用。没有模块化的时候，我们将所有的逻辑都写在一个 js 文件中，然后在 html 中引入该 js 文件。这种方式如果 js 文件可能会很大，阅读和后期开发都很不方便。
+
+```javascript
+let privateNum = 0;
+
+// 父类
+class BaseSlider {}
+
+// 子类
+class Slider extends BaseSlider {}
+
+// 实例化子类，调用相关逻辑...
+const slider = new Slider();
+```
+
+下面我们通过一步步改进来理解模块的作用。
+
+**(1) js 拆分**
+
+为了解决上述问题，我们可以将 js 拆成多份，分别引入到 html 文件中。
+
+base.js
+
+```javascript
+let privateNum = 0;
+
+class BaseSlider {}
+```
+
+slider.js
+
+```javascript
+class Slider extends BaseSlider {}
+```
+
+index.js
+
+```javascript
+const slider = new Slider();
+```
+
+index.html
+
+```html
+<script src="./base.js"></script>
+<script src="./slider.js"></script>
+<script src="./index.js"></script>
+```
+
+这么做实现了初步模块化，但是拆分的 js 文件之间有相互依赖关系，必须按顺序引入 html 中。并且在 base.js 中定义的 privateNum 是一个全局变量，我们希望消除这个全局变量，只在 base.js 内部使用它。
+
+**(2) 手动实现模块化**
+
+为了解决上述问题，我们可以使用学习 class 时提到的实现私有的方式来编写模块代码。
+
+base.js
+
+```javascript
+(function () {
+  let privateNum = 0;
+
+  class BaseSlider {}
+
+  // 暴露 BaseSlider
+  window.BaseSlider = BaseSlider;
+})();
+```
+
+slider.js
+
+```javascript
+(function () {
+  class Slider extends BaseSlider {}
+
+  // 暴露 BaseSlider
+  window.Slider = Slider;
+})();
+```
+
+index.js
+
+```javascript
+const slider = new Slider();
+```
+
+index.html
+
+```html
+<script src="./base.js"></script>
+<script src="./slider.js"></script>
+<script src="./index.js"></script
+```
+
+这种方式解决了消除了全局变量，但是还是没有解决加载顺序的问题，并且写法复杂，可读性差。
+
+**(3) 使用 Module**
+
+下面就用到了 ES6 支持的模块。
+
+base.js
+
+```javascript
+let privateNum = 0;
+
+class BaseSlider {}
+
+export default BaseSlider;  // 导出
+```
+
+slider.js
+
+```javascript
+import BaseSlider from './base.js';  // 导入
+
+class Slider extends BaseSlider {}
+
+export default Slider;  // 导出
+```
+
+index.js
+
+```javascript
+import Slider from './slider.js';  // 导入
+
+const slider = new Slider();
+```
+
+这样在 html 中就只需要引入 index.js 就可以好了，解决了模块化、全局变量、加载顺序这些问题，且可维护性好。
+
+# Module 的导入导出
+
+## 导入和导出
+
+导出的东西可以被导入（import），并访问到。导出是将当前模块中的内容暴露出去，以供外部使用；导入就是将其他模块暴露出的内容导入，之后就可以访问这些内容了。
+
+一个模块没有导出，也可以将其导入。被导入的代码会且仅会执行一次。
+
+如：编写模块 module.js，并且没有导出任何内容。
+
+```javascript
+const gender = 'male';
+console.log(gender);
+```
+
+在 html 中导入 module.js。
+
+```html
+<body>
+  <!-- html 中导入模块要指定 type -->
+  <script type="module">
+    // 即使导入多次，也只会执行一次 module.js 中的代码
+    import './module.js';
+    import './module.js';
+  </script>
+</body>
+```
+
+对于导出而言，有两种方式：① export default；② export。
+
+## export default
+
+对于 `export default` 而言：
+
+- 一个模块只能有一个 `export default`
+- 使用导入，导入时可以随意命名
+- 可以直接导出匿名内容
+
+`export default` 和对应的 `import` 方式：
+
+```javascript
+const gender = 'male';
+console.log(gender);
+
+export default gender;  // 只能导出一个
+```
+
+```javascript
+// 导入可以随意命名
+import sex from './module.js';  // 对应 export default
+console.log(sex);
+```
+
+`export default` 可以导出多种结构的数据，并且 `export default` 的时候可以导出匿名的函数、类等，因为导入的时候会命名。
+
+```javascript
+const age = 18;
+const sex = 'male';
+
+// 导出已经定义的变量
+export default age;
+// export default sex;
+
+// 导出基本数据类型
+// export default 20;
+
+// 导出对象
+// export default {};
+
+// 导出函数
+// const fn = () => {};
+// export default fn;
+
+// 导出匿名函数
+// export default function () {}
+
+// 导出匿名类
+// export default class {}
+```
+
+## export
+
+**(1) 基本用法**
+
+`export` 导出的必须是声明，或先声明再用花括号导出。并且可以多次导出，也可以一次导出多个。
+
+```javascript
+const age = 18;
+const sex = 'male';
+const name = 'Alex';
+
+// 导出声明
+export const hobby = 'play';
+export function myFunction() {}
+export class MyClass {}
+
+// 花括号导出
+export { name };
+
+// 导出多个
+export { age, sex };
+```
+
+导入指定名称的内容，可以导入多个。
+
+```javascript
+import { name } from './module.js';  // 对应 export
+
+import { age, sex, hobby } from './module.js';  // 导入多个
+```
+
+ 对于 `export` 导出的内容，导入时名称要对应上，所以不能直接导出匿名的内容。
+
+```javascript
+const sex = 'male';
+function fn() {}
+
+// 以下导出方式都是错的
+export 18;   // ×
+export sex;  // ×
+export fn;   // ×
+export function () {}  // 匿名不行
+export class {}        // 匿名不行
+```
+
+**(2) 起别名**
+
+`export` 方式导入导出名称必须对应上，但是可以在导出和导入的时候起别名。
+
+导出时可以起别名：
+
+```javascript
+const name = 'Alex';
+const sex = 'male';
+const aa = 'aa';
+
+// 导出时可以起别名
+export { name as username, sex, aa as bb};
+```
+
+导入时间也可以起别名：
+
+```javascript
+import { username, sex as gender, bb as cc };
+
+console.log(username, gender, cc);
+```
+
+**(3) 整体导入**
+
+如果导出的内容非常多，可以使用整体导入。整体导入不仅可以导入 `export` 导出的内容，还可以导入 `export default` 导出的内容。
+
+> 模块可以同时使用 `export` 和 `export default`，只不过 `export default` 只能有一个。
+
+```javascript
+const name = 'Alex';
+const sex = 'male';
+
+export { name, sex };
+export default 18;
+```
+
+使用整体导入，用一个对象来接收所有导出的内容，其中 `export default` 导出的内容会放在 `default` 属性中。
+
+```javascript
+import * as obj from './module.js';
+
+console.log(obj.name);     // 'Alex'
+console.log(obj.sex);      // 'male'
+console.log(obj.default);  // 18（export default 导出的内容）
+```
+
+**(4) 同时导入**
+
+同时导入 `export` 和 `export default` 导出的内容（不适用整体导入）。
+
+```javascript
+const name = 'Alex';
+const sex = 'male';
+
+export { name, sex };
+export default 18;
+```
+
+可以分别写 `export` 和 `export default` 对应的导入语句。
+
+```javascript
+import { name, sex } from './module.js';  // 对应 export
+import age from './module.js';  // 对用 export default
+```
+
+还可以用如下方式同时导入，一定是 export default 的在前。
+
+```javascript
+// 一定是 export default 的在前
+import age, { name, sex } from './module.js';
+```
+
