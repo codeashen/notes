@@ -7,7 +7,7 @@ import { defineConfig4CustomTheme, UserPlugins } from 'vuepress/config';
 import baiduCode from './config/baiduCode';     // 百度统计hm码
 import htmlModules from './config/htmlModules'; // 自定义插入的html块
 
-const DOMAIN_NAME = 'codeashen.github.io' // 域名 (不带https)
+const DOMAIN_NAME = 'notes.codeashen.top' // 域名 (不带https)
 const WEB_SITE = `https://${DOMAIN_NAME}` // 网址
 
 export default defineConfig4CustomTheme<VdoingThemeConfig>({
@@ -23,7 +23,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
   },
 
   // 默认'/'。如果你想将你的网站部署到如 https://foo.github.io/bar/，那么 base 应该被设置成 "/bar/",（否则页面将失去样式等文件）
-  base: '/notes/',
+  // base: '/',
 
   // 主题配置
   themeConfig: {
