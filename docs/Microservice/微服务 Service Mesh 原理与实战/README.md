@@ -1,6 +1,0 @@
-- [0-开篇词](0-开篇词/README.md)
-- [1-微服务和 Service Mesh 核心组件](1-微服务和%20Service%20Mesh%20核心组件/README.md)
-- [2-Service Mesh 实战](2-Service%20Mesh%20实战/README.md)
-- [3-自己动手用 Go 实现 Service Mesh](3-自己动手用%20Go%20实现%20Service%20Mesh/README.md)
-- [4-Service Mesh 落地和展望](4-Service%20Mesh%20落地和展望/README.md)
-- [5-结束语](5-结束语/README.md)
